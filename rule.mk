@@ -12,9 +12,9 @@ CFLAGS+=-I$(TOPDIR)/inc
 
 include $(TOPDIR)/ext/rule.mk
 
-ASCLIB_DIR=$(TOPDIR)/lib
-ASCLIB=$(ASCLIB_DIR)/libasc.a
-ASCLIB_FLG=-L$(ASCLIB_DIR) -lasc
+ACCUMLIB_DIR=$(TOPDIR)/lib
+ACCUMLIB=$(ACCUMLIB_DIR)/libaccum.a
+ACCUMLIB_FLG=-L$(ACCUMLIB_DIR) -laccum
 
 #If crypto++ is not a system library, set this var to include the location of its headers
 CRYPTOPP_INC=
