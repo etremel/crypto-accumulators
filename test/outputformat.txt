@@ -1,0 +1,13 @@
+Number of elements
+Key generation
+Prime representative generation
+Accumulation with private key 
+Accumulation with public key
+Witness generation with private key
+Witness generation with public key
+Verification of all elements
+
+Notes:
+All time values are in seconds
+Prime representative generation will be "0" for bilinear-map accumulators, which don't need that step
+Verification is always done with only public key information (though it can be done with private-key-generated witnesses and accumulators, it will take the exact same amount of time)
