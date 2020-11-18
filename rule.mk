@@ -6,6 +6,7 @@ CFLAGS+=-g
 #CFLAGS+=-O3
 CFLAGS+=-Wall
 CFLAGS+=-std=c++14
+CFLAGS+=-no-pie
 CFLAGS+=-pthread
 CFLAGS+=-D_REENTRANT
 CFLAGS+=-I$(TOPDIR)/inc

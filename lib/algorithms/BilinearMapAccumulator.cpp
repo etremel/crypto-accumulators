@@ -1,4 +1,4 @@
-/* 
+/*
  * Edward Tremel - etremel@cs.brown.edu
  *         April 2013
  */
@@ -303,7 +303,7 @@ void accumulateSetFromCoeffs(const vector<unique_ptr<Scalar>>& coeffs, const Bil
 void recursivePolMult(int low, int high, const vector<reference_wrapper<Scalar>>& diff, flint::ModPolynomial* pPoly) {
     const flint::BigInt modulus = ([](){flint::BigInt modulus;
                                         LibConversions::getModulus(modulus);
-                                        return std::move(modulus);})();
+                                        return modulus;})();
     if (high - low == 1) {
         flint::ModPolynomial x(modulus);
         //Sets coefficient 1 to 1, and modulus to the global DCLXVI modulus
@@ -327,7 +327,7 @@ void recursivePolMult(int low, int high, const vector<reference_wrapper<Scalar>>
 void computeCoefficients(const vector<reference_wrapper<Scalar>>& roots, vector<unique_ptr<Scalar>>& coeffs){
     const flint::BigInt modulus = ([](){flint::BigInt modulus;
                                         LibConversions::getModulus(modulus);
-                                        return std::move(modulus);})();
+                                        return modulus;})();
     flint::ModPolynomial polynomial(modulus);
     if(roots.size()){
         recursivePolMult(0, roots.size(), roots, &polynomial);

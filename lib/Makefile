@@ -4,16 +4,16 @@ SUBDIRS=utils bilinear algorithms suffix flint
 .PHONY:	asclib $(SUBDIRS)
 
 all:
-	make asclib
+	$(MAKE) asclib
 
 asclib: $(SUBDIRS)
 
 $(SUBDIRS):
-	make -C $@
+	$(MAKE) -C $@
 
-clean:	
+clean:
 	rm -f *.a
 	@for i in $(SUBDIRS); \
 	do \
-		(cd $$i ; make clean ;)\
+		(cd $$i ; $(MAKE) clean ;)\
 	done;

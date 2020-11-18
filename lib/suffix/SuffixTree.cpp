@@ -327,7 +327,7 @@ void SuffixTree::validate()
         }
     if ( error == 0 )
         cout << "All Suffixes present!\n";
-    int leaf_count = 0;
+    size_t leaf_count = 0;
     int branch_count = 0;
     for ( auto& countEntry : branchCount ) {
         if ( countEntry.second == 0 )

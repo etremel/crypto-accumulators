@@ -8,10 +8,10 @@ all: $(SUBDIRS)
 	@echo Done
 
 $(SUBDIRS):
-	make -C $@
+	$(MAKE) -C $@
 
 clean:
 	@for i in $(SUBDIRS_CLEAN); \
 	do \
-		(cd $$i ; make clean ;)\
+		(cd $$i ; $(MAKE) clean ;)\
 	done;
