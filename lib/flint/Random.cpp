@@ -5,7 +5,7 @@
  *      Author: etremel
  */
 
-#include <flint/Random.h>
+#include <flint/Random.hpp>
 
 namespace flint {
 

@@ -5,8 +5,8 @@
  *      Author: etremel
  */
 
-#include <flint/ModPolynomial.h>
-#include <flint/ArithmeticException.h>
+#include <flint/ModPolynomial.hpp>
+#include <flint/ArithmeticException.hpp>
 
 namespace flint {
 

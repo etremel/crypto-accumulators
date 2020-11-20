@@ -1,4 +1,4 @@
-#include <algorithms/PrimeRepGenerator.h>
+#include <algorithms/PrimeRepGenerator.hpp>
 
 PrimeRepGenerator::PrimeRepGenerator() {
 }

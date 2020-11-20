@@ -1,6 +1,6 @@
 
-#include <utils/Pointers.h>
-#include <algorithms/RSAKey.h>
+#include <utils/Pointers.hpp>
+#include <algorithms/RSAKey.hpp>
 
 using std::pair;
 

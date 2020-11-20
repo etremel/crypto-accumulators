@@ -3,18 +3,18 @@
 
 #include <vector>
 
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
 
 extern "C" {
     #include <openssl/rsa.h>
     #include <openssl/crypto.h>
 }
 
-#include <algorithms/RSAKey.h>
-#include <algorithms/PrimeRepGenerator.h>
+#include <algorithms/RSAKey.hpp>
+#include <algorithms/PrimeRepGenerator.hpp>
 
-#include <utils/ThreadPool.h>
+#include <utils/ThreadPool.hpp>
 
 namespace RSAAccumulator {
 

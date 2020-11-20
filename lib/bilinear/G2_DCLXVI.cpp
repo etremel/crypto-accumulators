@@ -3,8 +3,8 @@
  *         May 18, 2011
  */
 
-#include <bilinear/G2_DCLXVI.h>
-#include <utils/Pointers.h>
+#include <bilinear/G2_DCLXVI.hpp>
+#include <utils/Pointers.hpp>
 
 extern const scalar_t bn_n;
 extern const twistpoint_fp2_t bn_twistgen;

@@ -12,8 +12,8 @@
 
 #include <flint/flint.h>
 
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
 
 #include <cryptopp/integer.h>
 

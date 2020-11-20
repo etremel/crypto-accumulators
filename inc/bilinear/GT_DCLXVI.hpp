@@ -10,8 +10,8 @@ extern "C"{
 	#include <fp12e.h>
 }
 
-#include <bilinear/GT.h>
-#include <bilinear/Scalar_DCLXVI.h>
+#include <bilinear/GT.hpp>
+#include <bilinear/Scalar_DCLXVI.hpp>
 
 /*
  * This is the implementation of DCLXVI (http://cryptojedi.org/crypto/) for GT.

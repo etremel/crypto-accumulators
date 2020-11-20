@@ -10,8 +10,8 @@ extern "C"{
 	#include <twistpoint_fp2.h>
 }
 
-#include <bilinear/G.h>
-#include <bilinear/Scalar_DCLXVI.h>
+#include <bilinear/G.hpp>
+#include <bilinear/Scalar_DCLXVI.hpp>
 
 /*
  * This is the implementation of DCLXVI (http://cryptojedi.org/crypto/) for G2.

@@ -1,14 +1,14 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
 
-#include <bilinear/Scalar_DCLXVI.h>
-#include <bilinear/G1_DCLXVI.h>
-#include <bilinear/G2_DCLXVI.h>
-#include <bilinear/GT_DCLXVI.h>
+#include <bilinear/Scalar_DCLXVI.hpp>
+#include <bilinear/G1_DCLXVI.hpp>
+#include <bilinear/G2_DCLXVI.hpp>
+#include <bilinear/GT_DCLXVI.hpp>
 
-#include <utils/Profiler.h>
+#include <utils/Profiler.hpp>
 
 #include <algorithms/ASCAlgorithms.h>
 
@@ -76,9 +76,9 @@ static void *computeWitnesses(void *arg){
 
 	delete workers;
 	delete pT->polyCoeffs;
-	
+
 	pT->time = Profiler::getInstance()->getCurrentTime() - t1;
-	
+
 	pthread_exit(NULL);
 }
 
@@ -97,7 +97,7 @@ static void *computeISectData(void *arg){
 
 	// Coefficients
 	t1 = Profiler::getInstance()->getCurrentTime();
-	
+
 	MPZUtils::getInstance()->computeCoeffViaFFT(pT->intersection, pT->coeffs);
 
 	// Accumulator
@@ -112,13 +112,13 @@ static void *computeISectData(void *arg){
 	delete myCoeffs;
 
 	pT->time = Profiler::getInstance()->getCurrentTime() - t1;
-	
+
 	pthread_exit(NULL);
 }
 
 void ASCAlgorithms::intersectionQuery(const vector<vector<G *> *> *pk, const vector<vector<int64_t> *> *sets, const vector<int64_t> *intersection, QueryProof *proof, bool printTiming){
 	double t1, pqComp, total;
-	
+
 	// Compute P(s) & Q(s) coeffs
 	t1 = Profiler::getInstance()->getCurrentTime();
 	vector< vector<Scalar *> *> *pCoeffs = new vector< vector<Scalar *> *>();
@@ -148,7 +148,7 @@ void ASCAlgorithms::intersectionQuery(const vector<vector<G *> *> *pk, const vec
 	subsetThreadData->polyCoeffs = pCoeffs;
 	subsetThreadData->witnesses = proof->getWitnesses1();;
 	pthread_create(&subsetThread, NULL, (void*(*)(void*))computeWitnesses, (void*)subsetThreadData);
-	
+
 	// Complete witnesses
 	pthread_t completenessThread;
 	witnessesThreadArgT *completenessThreadData = new witnessesThreadArgT();
@@ -164,7 +164,7 @@ void ASCAlgorithms::intersectionQuery(const vector<vector<G *> *> *pk, const vec
 	pthread_join(completenessThread, NULL);
 
 	total = pqComp + max(iSectThreadData->time, max(subsetThreadData->time, completenessThreadData->time));
-	
+
 	if(printTiming){
 		cout<<fixed<<setprecision(6)<<iSectThreadData->time<<" ";
 		cout<<fixed<<setprecision(6)<<subsetThreadData->time<<" ";
@@ -172,7 +172,7 @@ void ASCAlgorithms::intersectionQuery(const vector<vector<G *> *> *pk, const vec
 		cout<<fixed<<setprecision(6)<<total<<" ";
 	}
 
-	delete iSectThreadData;	
+	delete iSectThreadData;
 	delete subsetThreadData;
 	delete completenessThreadData;
 }

@@ -12,13 +12,13 @@
 #include <vector>
 #include <memory>
 
-#include <algorithms/BilinearMapKey.h>
+#include <algorithms/BilinearMapKey.hpp>
 
-#include <bilinear/G.h>
-#include <bilinear/GT.h>
-#include <bilinear/Scalar.h>
+#include <bilinear/G.hpp>
+#include <bilinear/GT.hpp>
+#include <bilinear/Scalar.hpp>
 
-#include <utils/ThreadPool.h>
+#include <utils/ThreadPool.hpp>
 
 extern "C" {
 	#include <curvepoint_fp_multiscalar.h>

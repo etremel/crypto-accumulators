@@ -11,16 +11,16 @@
 #include <string>
 #include <memory>
 
-#include <algorithms/RSAAccumulator.h>
-#include <algorithms/RSAKey.h>
+#include <algorithms/RSAAccumulator.hpp>
+#include <algorithms/RSAKey.hpp>
 
-#include <utils/Profiler.h>
-#include <utils/Pointers.h>
-#include <utils/ThreadPool.h>
+#include <utils/Profiler.hpp>
+#include <utils/Pointers.hpp>
+#include <utils/ThreadPool.hpp>
 
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
-#include <flint/Random.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
+#include <flint/Random.hpp>
 
 using namespace std;
 

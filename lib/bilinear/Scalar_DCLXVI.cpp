@@ -3,8 +3,8 @@
  *         May 18, 2011
  */
 
-#include <bilinear/Scalar_DCLXVI.h>
-#include <utils/LibConversions.h>
+#include <bilinear/Scalar_DCLXVI.hpp>
+#include <utils/LibConversions.hpp>
 
 #include <mutex>
 

@@ -9,8 +9,8 @@
 #include <vector>
 #include <memory>
 
-#include <bilinear/G.h>
-#include <bilinear/Scalar.h>
+#include <bilinear/G.hpp>
+#include <bilinear/Scalar.hpp>
 
 class BilinearMapKey{
     public:

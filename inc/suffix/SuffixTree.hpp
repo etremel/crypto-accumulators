@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include <utils/StandardHashes.h>
+#include <utils/StandardHashes.hpp>
 
 //Forward declaration because there's more than one class in this header
 class SuffixTreeNode;

@@ -7,8 +7,8 @@
 
 #include <sstream>
 
-#include <flint/BigMod.h>
-#include <flint/ArithmeticException.h>
+#include <flint/BigMod.hpp>
+#include <flint/ArithmeticException.hpp>
 
 namespace flint {
 

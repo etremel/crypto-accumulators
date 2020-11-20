@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <utils/SHA256.h>
+#include <utils/SHA256.hpp>
 
 class HashNode{
 	public:

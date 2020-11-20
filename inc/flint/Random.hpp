@@ -9,8 +9,8 @@
 #define RANDOM_H_
 
 #include <flint/fmpz.h>
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
 
 namespace flint {
 

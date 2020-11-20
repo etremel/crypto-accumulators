@@ -11,12 +11,12 @@
 #include <LiDIA/bigint.h>
 #include <LiDIA/bigmod.h>
 
-#include <bilinear/G1_DCLXVI.h>
-#include <bilinear/G2_DCLXVI.h>
-#include <bilinear/Scalar_DCLXVI.h>
+#include <bilinear/G1_DCLXVI.hpp>
+#include <bilinear/G2_DCLXVI.hpp>
+#include <bilinear/Scalar_DCLXVI.hpp>
 
-#include <utils/LibConversions.h>
-#include <utils/testutils.h>
+#include <utils/LibConversions.hpp>
+#include <utils/testutils.hpp>
 
 using namespace std;
 /*

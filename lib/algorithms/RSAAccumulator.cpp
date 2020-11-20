@@ -8,13 +8,13 @@
 #include <functional>
 #include <algorithm>
 
-#include <utils/Pointers.h>
-#include <utils/LibConversions.h>
-#include <utils/ThreadPool.h>
+#include <utils/Pointers.hpp>
+#include <utils/LibConversions.hpp>
+#include <utils/ThreadPool.hpp>
 
-#include <algorithms/PrimeRepGenerator.h>
-#include <algorithms/OraclePrimeRep.h>
-#include <algorithms/RSAAccumulator.h>
+#include <algorithms/PrimeRepGenerator.hpp>
+#include <algorithms/OraclePrimeRep.hpp>
+#include <algorithms/RSAAccumulator.hpp>
 
 #include <cryptopp/rsa.h>
 #include <cryptopp/osrng.h>

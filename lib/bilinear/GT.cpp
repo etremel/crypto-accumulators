@@ -1,9 +1,9 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
 
-#include <bilinear/GT.h>
+#include <bilinear/GT.hpp>
 
 GT::GT(){
 }

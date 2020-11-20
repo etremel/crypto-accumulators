@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include <flint/fmpz.h>
-#include <flint/BigInt.h>
+#include <flint/BigInt.hpp>
 
 namespace flint {
 

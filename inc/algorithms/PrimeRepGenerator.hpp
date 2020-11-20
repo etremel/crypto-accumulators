@@ -1,7 +1,7 @@
 #ifndef PRIMEREPGENERATOR_H
 #define PRIMEREPGENERATOR_H
 
-#include <flint/BigInt.h>
+#include <flint/BigInt.hpp>
 
 /**
  * Interface for any prime representative generator that can be used by

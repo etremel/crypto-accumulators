@@ -12,8 +12,8 @@
 
 #include <flint/fmpz_mod_poly.h>
 
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
 
 namespace flint {
 

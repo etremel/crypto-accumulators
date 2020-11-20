@@ -2,9 +2,9 @@
 #define RSAKEY_H
 
 #include <vector>
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
-#include <algorithms/PrimeRepGenerator.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
+#include <algorithms/PrimeRepGenerator.hpp>
 
 
 class RSAKey {

@@ -5,7 +5,7 @@
 
 #include <pthread.h>
 
-#include <utils/MerkleTree.h>
+#include <utils/MerkleTree.hpp>
 
 using namespace std;
 

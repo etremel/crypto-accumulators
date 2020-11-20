@@ -10,11 +10,11 @@
 #include <iostream>
 #include <fstream>
 
-#include <flint/BigInt.h>
-#include <flint/BigMod.h>
-#include <flint/Random.h>
+#include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
+#include <flint/Random.hpp>
 
-#include <bilinear/Scalar_DCLXVI.h>
+#include <bilinear/Scalar_DCLXVI.hpp>
 
 using namespace std;
 

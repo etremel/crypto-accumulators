@@ -14,9 +14,9 @@ extern "C"{
 
 //#include <utils/LibConversions.h>
 //#include <LiDIA/bigmod.h>
-#include <flint/BigMod.h>
+#include <flint/BigMod.hpp>
 
-#include <bilinear/Scalar.h>
+#include <bilinear/Scalar.hpp>
 
 /*
  * This is the implementation of DCLXVI (http://cryptojedi.org/crypto/) for Zp.

@@ -11,7 +11,7 @@ extern "C" {
 }
 
 #include <vector>
-#include <bilinear/G.h>
+#include <bilinear/G.hpp>
 
 class MySHA256{
 	public:

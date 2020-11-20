@@ -21,7 +21,7 @@
 #include <unordered_map>
 #include <memory>
 #include <utility>
-#include <suffix/SuffixTree.h>
+#include <suffix/SuffixTree.hpp>
 
 using std::cout;
 using std::cin;

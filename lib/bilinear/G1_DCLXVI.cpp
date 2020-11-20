@@ -3,8 +3,8 @@
  *         May 18, 2011
  */
 
-#include <bilinear/G1_DCLXVI.h>
-#include <utils/Pointers.h>
+#include <bilinear/G1_DCLXVI.hpp>
+#include <utils/Pointers.hpp>
 
 extern const scalar_t bn_n;
 extern const curvepoint_fp_t bn_curvegen;

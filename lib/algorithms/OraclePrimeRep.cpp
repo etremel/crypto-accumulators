@@ -10,10 +10,10 @@
 #include <sstream>
 #include <algorithm>
 
-#include <algorithms/OraclePrimeRep.h>
+#include <algorithms/OraclePrimeRep.hpp>
 
-#include <utils/testutils.h>
-#include <utils/LibConversions.h>
+#include <utils/testutils.hpp>
+#include <utils/LibConversions.hpp>
 
 #include <cryptopp/sha.h>
 

@@ -5,7 +5,7 @@
 #include <cassert>
 #include <string>
 
-#include <suffix/SuffixTree.h>
+#include <suffix/SuffixTree.hpp>
 
 using std::cout;
 using std::cin;

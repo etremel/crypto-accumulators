@@ -3,13 +3,13 @@
  *         May 18, 2011
  */
 
-#include <algorithms/BilinearMapKey.h>
+#include <algorithms/BilinearMapKey.hpp>
 
-#include <bilinear/G1_DCLXVI.h>
-#include <bilinear/G2_DCLXVI.h>
+#include <bilinear/G1_DCLXVI.hpp>
+#include <bilinear/G2_DCLXVI.hpp>
 
-#include <bilinear/Scalar_DCLXVI.h>
-#include <utils/Pointers.h>
+#include <bilinear/Scalar_DCLXVI.hpp>
+#include <utils/Pointers.hpp>
 
 BilinearMapKey::BilinearMapKey(){
     _sk = unique_new<ScalarDCLXVI>();

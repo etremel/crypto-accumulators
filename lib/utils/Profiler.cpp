@@ -3,7 +3,7 @@
  *         May 18, 2011
  */
 
-#include <utils/Profiler.h>
+#include <utils/Profiler.hpp>
 
 using std::cout;
 using std::endl;

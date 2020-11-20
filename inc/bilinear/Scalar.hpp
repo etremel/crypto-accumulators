@@ -7,7 +7,7 @@
 #define _SCALAR_H_
 
 //#include <LiDIA/bigmod.h>
-#include <flint/BigMod.h>
+#include <flint/BigMod.hpp>
 
 #include <fstream>
 

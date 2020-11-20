@@ -5,7 +5,7 @@
 
 #include <pthread.h>
 
-#include <utils/SHA256.h>
+#include <utils/SHA256.hpp>
 
 static pthread_mutex_t _sha256Mutex = PTHREAD_MUTEX_INITIALIZER;
 

@@ -1,8 +1,8 @@
 #ifndef ORACLEPRIMEREP_H
 #define ORACLEPRIMEREP_H
 
-#include <algorithms/PrimeRepGenerator.h>
-#include <flint/BigInt.h>
+#include <algorithms/PrimeRepGenerator.hpp>
+#include <flint/BigInt.hpp>
 
 /**
  * Prime representative generator that uses a secure hash function with salted

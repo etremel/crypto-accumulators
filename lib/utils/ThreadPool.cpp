@@ -1,5 +1,5 @@
 
-#include <utils/ThreadPool.h>
+#include <utils/ThreadPool.hpp>
 
 void Worker::operator()()
 {

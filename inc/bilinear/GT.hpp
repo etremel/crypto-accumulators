@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-#include <bilinear/Scalar.h>
+#include <bilinear/Scalar.hpp>
 
 /*
  * Abstract interface for an object in group GT, any implementation of

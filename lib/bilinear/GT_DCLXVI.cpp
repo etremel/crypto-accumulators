@@ -3,8 +3,8 @@
  *         May 18, 2011
  */
 
-#include <bilinear/GT_DCLXVI.h>
-#include <utils/Pointers.h>
+#include <bilinear/GT_DCLXVI.hpp>
+#include <utils/Pointers.hpp>
 
 GTDCLXVI::GTDCLXVI(){
 }

@@ -10,21 +10,21 @@
 #include <LiDIA/bigint.h>
 #include <LiDIA/multi_bigmod.h>
 
-#include <bilinear/Scalar_DCLXVI.h>
-#include <bilinear/G1_DCLXVI.h>
-#include <bilinear/G2_DCLXVI.h>
-#include <bilinear/GT_DCLXVI.h>
+#include <bilinear/Scalar_DCLXVI.hpp>
+#include <bilinear/G1_DCLXVI.hpp>
+#include <bilinear/G2_DCLXVI.hpp>
+#include <bilinear/GT_DCLXVI.hpp>
 
-#include <utils/LibConversions.h>
-#include <utils/Profiler.h>
-#include <utils/Pointers.h>
-#include <utils/ThreadPool.h>
+#include <utils/LibConversions.hpp>
+#include <utils/Profiler.hpp>
+#include <utils/Pointers.hpp>
+#include <utils/ThreadPool.hpp>
 
-#include <algorithms/BilinearMapAccumulator.h>
-#include <algorithms/RSAAccumulator.h>
-#include <algorithms/RSAKey.h>
+#include <algorithms/BilinearMapAccumulator.hpp>
+#include <algorithms/RSAAccumulator.hpp>
+#include <algorithms/RSAKey.hpp>
 
-#include <utils/testutils.h>
+#include <utils/testutils.hpp>
 
 using testutils::print_hex;
 using namespace std;
