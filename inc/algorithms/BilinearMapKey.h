@@ -12,12 +12,10 @@
 #include <bilinear/G.h>
 #include <bilinear/Scalar.h>
 
-using namespace std;
-
-class BilinearMapKey{    
+class BilinearMapKey{
     public:
         //first: a vector of G1 elements. second: a vector of G2 elements.
-        typedef pair<vector<unique_ptr<G>>, vector<unique_ptr<G>>> PublicKey;
+        typedef std::pair<std::vector<std::unique_ptr<G>>, std::vector<std::unique_ptr<G>>> PublicKey;
         BilinearMapKey();
         ~BilinearMapKey();
         Scalar &getSecretKey() const;
@@ -27,8 +25,8 @@ class BilinearMapKey{
 		void readPkFromFile(const char *fName);
 		void writePkToFile(const char *fName) const;
 	private:
-        unique_ptr<Scalar> _sk;
-        shared_ptr<PublicKey> _pk;
+        std::unique_ptr<Scalar> _sk;
+        std::shared_ptr<PublicKey> _pk;
 };
 
 #endif /* _BILINEAR_MAP_KEY_H_ */

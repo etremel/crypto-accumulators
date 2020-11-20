@@ -7,6 +7,8 @@
 
 #include <utils/MerkleTree.h>
 
+using namespace std;
+
 MerkleTree::MerkleTree(){
 }
 

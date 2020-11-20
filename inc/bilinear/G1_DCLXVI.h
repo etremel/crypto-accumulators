@@ -35,8 +35,8 @@ class G1DCLXVI : public G{
 		void exportObject(void *obj) const;
 		size_t getSize() const;
 		char* getByteBuffer() const;
-        void readFromFile(istream &inFile);
-        void writeToFile(ostream &outFile) const;
+        void readFromFile(std::istream &inFile);
+        void writeToFile(std::ostream &outFile) const;
 
 		// Get the pointer to G1 object of the underlying DCLXVI implementation
         const curvepoint_fp_struct_t *getUnderlyingObj() const;

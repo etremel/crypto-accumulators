@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -13,15 +13,13 @@ extern "C" {
 #include <vector>
 #include <bilinear/G.h>
 
-using std::vector;
-
 class MySHA256{
 	public:
 		static MySHA256* getInstance();
 
-		void computeDigest(const char *input, int length, vector<unsigned char> &output);
-		void computeAccumulatorDigest(const G *acc, vector<unsigned char> &output);
-		bool isHashesEqual(const vector<unsigned char> &hash1, const vector<unsigned char> &hash2);
+		void computeDigest(const char *input, int length, std::vector<unsigned char> &output);
+		void computeAccumulatorDigest(const G *acc, std::vector<unsigned char> &output);
+		bool isHashesEqual(const std::vector<unsigned char> &hash1, const std::vector<unsigned char> &hash2);
 	protected:
 		MySHA256();
 	private:

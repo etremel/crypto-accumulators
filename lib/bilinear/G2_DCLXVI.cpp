@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -102,7 +102,7 @@ const twistpoint_fp2_struct_t *G2DCLXVI::getUnderlyingObj() const{
     return _twistpoint;
 }
 
-void G2DCLXVI::readFromFile(istream &inFile){
+void G2DCLXVI::readFromFile(std::istream &inFile){
 	for(int i=0; i<24; i++){
 		inFile.read((char *)&_twistpoint->m_x->v[i], sizeof(mydouble));
 		inFile.read((char *)&_twistpoint->m_y->v[i], sizeof(mydouble));
@@ -111,7 +111,7 @@ void G2DCLXVI::readFromFile(istream &inFile){
 	}
 }
 
-void G2DCLXVI::writeToFile(ostream &outFile) const{
+void G2DCLXVI::writeToFile(std::ostream &outFile) const{
 	for(int i=0; i<24; i++){
 		outFile.write((char *)&_twistpoint->m_x->v[i], sizeof(mydouble));
 		outFile.write((char *)&_twistpoint->m_y->v[i], sizeof(mydouble));

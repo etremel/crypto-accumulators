@@ -20,7 +20,7 @@ extern "C"{
 
 /*
  * This is the implementation of DCLXVI (http://cryptojedi.org/crypto/) for Zp.
- * It implements all APIs defined in include/bilinear/Scalar.h, refer to that 
+ * It implements all APIs defined in include/bilinear/Scalar.h, refer to that
  * interface for meanings of APIs.
  */
 
@@ -48,8 +48,8 @@ class ScalarDCLXVI : public Scalar {
 
 		void print() const;
 		void printPretty() const;
-		void readFromFile(ifstream &inFile);
-		void writeToFile(ofstream &outFile) const;
+		void readFromFile(std::ifstream &inFile);
+		void writeToFile(std::ofstream &outFile) const;
 
 		// Get the pointer to Zp object of the underlying DCLXVI implementation
         unsigned long long *getUnderlyingObj();

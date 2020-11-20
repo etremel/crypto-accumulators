@@ -24,10 +24,6 @@ extern "C" {
 	#include <curvepoint_fp_multiscalar.h>
 	#include <twistpoint_fp2_multiscalar.h>
 }
-//Reduces clutter in declarations
-using std::vector;
-using std::unique_ptr;
-using std::reference_wrapper;
 
 namespace BilinearMapAccumulator{
         /**
@@ -48,7 +44,7 @@ namespace BilinearMapAccumulator{
          * @param threadPool The ThreadPool to use for concurrent computation of
          *        public key components.
          */
-        void genKey(const vector<vector<reference_wrapper<Scalar>>>& sets,
+        void genKey(const std::vector<std::vector<std::reference_wrapper<Scalar>>>& sets,
                 const unsigned int maxPkSize, BilinearMapKey& key, ThreadPool& threadPool);
 
         /**
@@ -61,7 +57,7 @@ namespace BilinearMapAccumulator{
          *        accumulation, and after execution of this function will
          *        contain the accumulated product. Should be an element of G1.
          */
-        void accumulateSet(const vector<reference_wrapper<Scalar>>& set,
+        void accumulateSet(const std::vector<std::reference_wrapper<Scalar>>& set,
                 const Scalar& privKey, G& acc);
 
         /**
@@ -75,7 +71,7 @@ namespace BilinearMapAccumulator{
          *        contain the accumulated product. Should be an element of G1.
          * @param threadPool the ThreadPool to use for concurrent computation.
          */
-        void accumulateSet(const vector<reference_wrapper<Scalar>>& set,
+        void accumulateSet(const std::vector<std::reference_wrapper<Scalar>>& set,
                 const BilinearMapKey::PublicKey& publicKey, G& acc, ThreadPool& threadPool);
 
         /**
@@ -95,9 +91,9 @@ namespace BilinearMapAccumulator{
          *        is in G1. (Sets are accumulated in G1, witnesses in G2).
          * @param threadPool the ThreadPool to use for concurrent computation.
          */
-        void accumulateSetFromCoeffs(const vector<unique_ptr<Scalar>>& coeffs,
+        void accumulateSetFromCoeffs(const std::vector<std::unique_ptr<Scalar>>& coeffs,
                 const BilinearMapKey::PublicKey& publicKey, G& acc, bool inG2, ThreadPool& threadPool);
-		
+
         /**
          * Computes a witness for each element of the given set of Scalars (with
          * respect to the entire set), placing the results in the given vector
@@ -112,8 +108,9 @@ namespace BilinearMapAccumulator{
          *        witness in this vector is a witness for the ith element in set
          * @param threadPool the ThreadPool to use for concurrent computation.
          */
-        void witnessesForSet(const vector<reference_wrapper<Scalar>>& set,
-                const Scalar& privKey, G& base, vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool);
+        void witnessesForSet(const std::vector<std::reference_wrapper<Scalar>>& set,
+                const Scalar& privKey, G& base, std::vector<std::unique_ptr<G>>& witnesses,
+                ThreadPool& threadPool);
 
         /**
          * Computes a witness for each element of the given set of Scalars (with
@@ -128,8 +125,9 @@ namespace BilinearMapAccumulator{
          *        witness in this vector is a witness for the ith element in set
          * @param threadPool the ThreadPool to use for concurrent computation.
          */
-        void witnessesForSet(const vector<reference_wrapper<Scalar>>& set,
-                const BilinearMapKey::PublicKey& publicKey, vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool);
+        void witnessesForSet(const std::vector<std::reference_wrapper<Scalar>>& set,
+                const BilinearMapKey::PublicKey& publicKey, std::vector<std::unique_ptr<G>>& witnesses,
+                ThreadPool& threadPool);
 
         /**
          * Computes the pairing function of group elements g1Element and
@@ -158,8 +156,8 @@ namespace BilinearMapAccumulator{
          * @return true if the witness verifies the element's membership with
          *         the accumulator, false otherwise
          */
-        bool verify(const Scalar& element,  const G& witness, const G& accumulator, BilinearMapKey::PublicKey& publicKey);
-		
+        bool verify(const Scalar& element, const G& witness, const G& accumulator, BilinearMapKey::PublicKey& publicKey);
+
 };
 
 #endif /* _BILINEAR_MAP_ACCUMULATOR_H_ */

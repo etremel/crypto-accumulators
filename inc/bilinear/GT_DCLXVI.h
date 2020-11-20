@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -30,8 +30,8 @@ class GTDCLXVI : public GT{
         int isEqual(const GT& other);
 		void importObject(const void *obj);
 		void exportObject(void *obj) const;
-        void readFromFile(istream &inFile);
-        void writeToFile(ostream &outFile) const;
+        void readFromFile(std::istream &inFile);
+        void writeToFile(std::ostream &outFile) const;
 	private:
 		// The underlying GT object
 		fp12e_t _fp12e;

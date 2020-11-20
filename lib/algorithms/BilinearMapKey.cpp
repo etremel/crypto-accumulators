@@ -46,41 +46,41 @@ BilinearMapKey::PublicKey& BilinearMapKey::getPublicKey() const{
 }
 
 void BilinearMapKey::readSkFromFile(const char *fName){
-	ifstream in(fName, ios::in | ios::binary);
+	std::ifstream in(fName, std::ios::in | std::ios::binary);
 	_sk->readFromFile(in);
 	in.close();
 }
 
 void BilinearMapKey::writeSkToFile(const char *fName) const{
-	ofstream out(fName, ios::out | ios::binary);
+	std::ofstream out(fName, std::ios::out | std::ios::binary);
 	_sk->writeToFile(out);
 	out.close();
 }
 
 void BilinearMapKey::readPkFromFile(const char *fName){
-	ifstream in(fName, ios::in | ios::binary);
+	std::ifstream in(fName, std::ios::in | std::ios::binary);
 
 	size_t pkSize;
 	in.read((char *)&pkSize, sizeof(pkSize));
-	
+
     for(size_t i=0; i<pkSize; i++){
-        unique_ptr<G> g1 = unique_new<G1DCLXVI>();
+        std::unique_ptr<G> g1 = unique_new<G1DCLXVI>();
 		g1->readFromFile(in);
         _pk->first.push_back(std::move(g1));
 	}
 	for(size_t i=0; i<pkSize; i++){
-        unique_ptr<G> g2 = unique_new<G2DCLXVI>();
+        std::unique_ptr<G> g2 = unique_new<G2DCLXVI>();
 		g2->readFromFile(in);
         _pk->second.push_back(std::move(g2));
 	}
 
 	in.close();
-	
-	cout<<"Loading public key done."<<" Size = "<<pkSize<<" element(s)."<<endl;
+
+	std::cout<<"Loading public key done."<<" Size = "<<pkSize<<" element(s)."<<std::endl;
 }
 
 void BilinearMapKey::writePkToFile(const char *fName) const{
-	ofstream out(fName, ios::out | ios::binary);
+	std::ofstream out(fName, std::ios::out | std::ios::binary);
 
     size_t pkSize = _pk->first.size();
 	out.write((char *)&pkSize, sizeof(pkSize));

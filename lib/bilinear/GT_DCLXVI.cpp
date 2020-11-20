@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -63,7 +63,7 @@ void GTDCLXVI::exportObject(void *obj) const{
 	fp12e_set(rop, _fp12e);
 }
 
-void GTDCLXVI::readFromFile(istream &inFile){
+void GTDCLXVI::readFromFile(std::istream &inFile){
 	for(int i=0; i<24; i++){
 		inFile.read((char *)&_fp12e->m_a->m_a->v[i], sizeof(mydouble));
 		inFile.read((char *)&_fp12e->m_a->m_b->v[i], sizeof(mydouble));
@@ -74,7 +74,7 @@ void GTDCLXVI::readFromFile(istream &inFile){
 	}
 }
 
-void GTDCLXVI::writeToFile(ostream &outFile) const{
+void GTDCLXVI::writeToFile(std::ostream &outFile) const{
 	for(int i=0; i<24; i++){
 		outFile.write((char *)&_fp12e->m_a->m_a->v[i], sizeof(mydouble));
 		outFile.write((char *)&_fp12e->m_a->m_b->v[i], sizeof(mydouble));

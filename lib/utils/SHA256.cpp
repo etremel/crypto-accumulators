@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -25,9 +25,9 @@ MySHA256* MySHA256::getInstance(){
 	return _instance;
 }
 
-void MySHA256::computeDigest(const char *input, int length, vector<unsigned char> &output){
+void MySHA256::computeDigest(const char *input, int length, std::vector<unsigned char> &output){
 	unsigned char tempOutput[SHA256_DIGEST_LENGTH];
-	
+
 	SHA256_CTX sha256;
 	SHA256_Init(&sha256);
 	SHA256_Update(&sha256, input, length);
@@ -39,11 +39,11 @@ void MySHA256::computeDigest(const char *input, int length, vector<unsigned char
 	}
 }
 
-void MySHA256::computeAccumulatorDigest(const G *acc, vector<unsigned char> &output){
+void MySHA256::computeAccumulatorDigest(const G *acc, std::vector<unsigned char> &output){
 	computeDigest(acc->getByteBuffer(), acc->getSize(), output);
 }
 
-bool MySHA256::isHashesEqual(const vector<unsigned char> &hash1, const vector<unsigned char> &hash2){
+bool MySHA256::isHashesEqual(const std::vector<unsigned char> &hash1, const std::vector<unsigned char> &hash2){
 	if(hash1.size() != hash2.size() || hash1.size() != SHA256_DIGEST_LENGTH){
 		return false;
 	}
@@ -52,8 +52,8 @@ bool MySHA256::isHashesEqual(const vector<unsigned char> &hash1, const vector<un
 		if(hash1[i] != hash2[i]){
 			return false;
 		}
-	}	
-	
+	}
+
 	return true;
 }
 

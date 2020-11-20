@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -19,15 +19,13 @@
 #include <time.h>
 #include <sys/time.h>
 
-using std::vector;
-
 namespace Profiler{
 
 		double getCurrentTime();
 		int64_t getRandomNum(int64_t max);
-		void printSet(vector<int64_t> *s);
-		void generateRandomSet(int64_t size, vector<int64_t> *s);
-		
+		void printSet(std::vector<int64_t> *s);
+		void generateRandomSet(int64_t size, std::vector<int64_t> *s);
+
 };
 
 #endif /* _PROFILER_H_ */

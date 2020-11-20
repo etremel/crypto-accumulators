@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -136,14 +136,14 @@ void ScalarDCLXVI::printPretty() const{
 	cout<<dec<<"In decimal: "<<zzp<<". Size: "<<_size<<" bits"<<endl;
 }
 
-void ScalarDCLXVI::readFromFile(ifstream &inFile){
+void ScalarDCLXVI::readFromFile(std::ifstream &inFile){
 	for(int i=0; i<4; i++){
 		inFile.read((char *)&_scalar[i], sizeof(unsigned long long));
 	}
 	_size = scalar_scanb(_scalar) + 1;
 }
 
-void ScalarDCLXVI::writeToFile(ofstream &outFile) const{
+void ScalarDCLXVI::writeToFile(std::ofstream &outFile) const{
 	for(int i=0; i<4; i++){
 		outFile.write((char *)&_scalar[i], sizeof(unsigned long long));
 	}

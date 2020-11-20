@@ -104,7 +104,7 @@ const curvepoint_fp_struct_t* G1DCLXVI::getUnderlyingObj() const {
     return const_curvepoint;
 }
 
-void G1DCLXVI::readFromFile(istream &inFile){
+void G1DCLXVI::readFromFile(std::istream &inFile){
 	for(int i=0; i<12; i++){
 		inFile.read((char *)&_curvepoint->m_x->v[i], sizeof(mydouble));
 		inFile.read((char *)&_curvepoint->m_y->v[i], sizeof(mydouble));
@@ -113,7 +113,7 @@ void G1DCLXVI::readFromFile(istream &inFile){
 	}
 }
 
-void G1DCLXVI::writeToFile(ostream &outFile) const{
+void G1DCLXVI::writeToFile(std::ostream &outFile) const{
 	for(int i=0; i<12; i++){
 		outFile.write((char *)&_curvepoint->m_x->v[i], sizeof(mydouble));
 		outFile.write((char *)&_curvepoint->m_y->v[i], sizeof(mydouble));

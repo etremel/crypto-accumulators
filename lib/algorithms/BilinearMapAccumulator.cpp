@@ -48,7 +48,7 @@ typedef std::unique_lock<std::mutex> lock_t;
 
 /*-------------------------------Key Generation-------------------------------*/
 //Private helper method
-void computeG1Powers(const Scalar& secretKey, const unsigned int numPowers, vector<unique_ptr<G>>& pk1) {
+void computeG1Powers(const Scalar& secretKey, const unsigned int numPowers, std::vector<unique_ptr<G>>& pk1) {
     pk1.push_back(unique_new<G1DCLXVI>());
     for(unsigned int i=0; i<numPowers; i++){
         unique_ptr<G> g1Pow = unique_new<G1DCLXVI>();
@@ -58,7 +58,7 @@ void computeG1Powers(const Scalar& secretKey, const unsigned int numPowers, vect
 }
 
 //Private helper method
-void computeG2Powers(const Scalar& secretKey, const unsigned int numPowers, vector<unique_ptr<G>>& pk2) {
+void computeG2Powers(const Scalar& secretKey, const unsigned int numPowers, std::vector<unique_ptr<G>>& pk2) {
     pk2.push_back(unique_new<G2DCLXVI>());
     for(unsigned int i=0; i<numPowers; i++){
         unique_ptr<G> g2Pow = unique_new<G2DCLXVI>();
@@ -67,7 +67,7 @@ void computeG2Powers(const Scalar& secretKey, const unsigned int numPowers, vect
     }
 }
 
-void genKey(const vector<vector<reference_wrapper<Scalar>>>& sets, const unsigned int maxPkSize, BilinearMapKey& key, ThreadPool& threadPool){
+void genKey(const std::vector<std::vector<reference_wrapper<Scalar>>>& sets, const unsigned int maxPkSize, BilinearMapKey& key, ThreadPool& threadPool){
 //    cout<<"Generating key...";
     unsigned int q = 0;
 
@@ -93,8 +93,8 @@ void genKey(const vector<vector<reference_wrapper<Scalar>>>& sets, const unsigne
 
     // Public key
     BilinearMapKey::PublicKey& pk = key.getPublicKey();
-    vector<unique_ptr<G> >& pk1 = pk.first;
-    vector<unique_ptr<G> >& pk2 = pk.second;
+    std::vector<unique_ptr<G> >& pk1 = pk.first;
+    std::vector<unique_ptr<G> >& pk2 = pk.second;
 
     //Each component of the public key (powers of G1 and powers of G2) can be computed separately
     future<void> pk1Future = threadPool.enqueue<void>(bind(computeG1Powers, cref(sk), q, ref(pk1)));
@@ -108,7 +108,7 @@ void genKey(const vector<vector<reference_wrapper<Scalar>>>& sets, const unsigne
 
 /*--------------------------Private key accumulation--------------------------*/
 
-void accumulateSet(const vector<reference_wrapper<Scalar>>& set, const Scalar& privKey, G& acc) {
+void accumulateSet(const std::vector<reference_wrapper<Scalar>>& set, const Scalar& privKey, G& acc) {
     flint::BigInt modulus;
     LibConversions::getModulus(modulus);
     flint::BigMod sk(modulus);
@@ -149,7 +149,7 @@ void accumulateSet(const vector<reference_wrapper<Scalar>>& set, const Scalar& p
  *         corresponding range of coefficients
  */
 unique_ptr<G> computePower(const bool& inG2, const BilinearMapKey::PublicKey& publicKey,
-        const vector<unique_ptr<Scalar>>& coeffs, size_t startOffset, size_t endOffset){
+        const std::vector<unique_ptr<Scalar>>& coeffs, size_t startOffset, size_t endOffset){
 
     size_t rangeLen = endOffset - startOffset;
 
@@ -195,12 +195,12 @@ unique_ptr<G> computePower(const bool& inG2, const BilinearMapKey::PublicKey& pu
 
 }
 
-void accumulateSetFromCoeffs(const vector<unique_ptr<Scalar>>& coeffs, const BilinearMapKey::PublicKey& publicKey,
+void accumulateSetFromCoeffs(const std::vector<unique_ptr<Scalar>>& coeffs, const BilinearMapKey::PublicKey& publicKey,
         G& acc, bool inG2, ThreadPool& threadPool){
     static const size_t MAX_TASKS = 50;
     static const size_t MIN_OPERATIONS_PER_TASK = 1000;
-    const vector<unique_ptr<G>>& pk1 = publicKey.first;
-    const vector<unique_ptr<G>>& pk2 = publicKey.second;
+    const std::vector<unique_ptr<G>>& pk1 = publicKey.first;
+    const std::vector<unique_ptr<G>>& pk2 = publicKey.second;
 
     //compute the first power, for the constant term, outside of threads
     //initialize acc to this value (disregard what it used to be)
@@ -245,7 +245,7 @@ void accumulateSetFromCoeffs(const vector<unique_ptr<Scalar>>& coeffs, const Bil
 //    cout << "Threads: " << numOfThreads <<endl;
 //    cout << "leftItems: " << leftItems << endl;
 
-    vector<future<unique_ptr<G>>> workerFutures;
+    std::vector<future<unique_ptr<G>>> workerFutures;
     //Starting at index 1, divide the coefficients vector up into rangeLen-size
     //chunks, and spawn a new thread to deal with each subset
     size_t offset = 1;
@@ -300,7 +300,7 @@ void accumulateSetFromCoeffs(const vector<unique_ptr<Scalar>>& coeffs, const Bil
 }
 
 //Private function - not declared in header
-void recursivePolMult(int low, int high, const vector<reference_wrapper<Scalar>>& diff, flint::ModPolynomial* pPoly) {
+void recursivePolMult(int low, int high, const std::vector<reference_wrapper<Scalar>>& diff, flint::ModPolynomial* pPoly) {
     const flint::BigInt modulus = ([](){flint::BigInt modulus;
                                         LibConversions::getModulus(modulus);
                                         return modulus;})();
@@ -324,7 +324,7 @@ void recursivePolMult(int low, int high, const vector<reference_wrapper<Scalar>>
 }
 
 //Private function - not declared in header
-void computeCoefficients(const vector<reference_wrapper<Scalar>>& roots, vector<unique_ptr<Scalar>>& coeffs){
+void computeCoefficients(const std::vector<reference_wrapper<Scalar>>& roots, std::vector<unique_ptr<Scalar>>& coeffs){
     const flint::BigInt modulus = ([](){flint::BigInt modulus;
                                         LibConversions::getModulus(modulus);
                                         return modulus;})();
@@ -344,9 +344,9 @@ void computeCoefficients(const vector<reference_wrapper<Scalar>>& roots, vector<
 }
 
 //Private function - not declared in header
-void accumulateSet(const vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
+void accumulateSet(const std::vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
         G& acc, bool inG2, ThreadPool& threadPool){
-    vector<unique_ptr<Scalar>> coeffs;
+    std::vector<unique_ptr<Scalar>> coeffs;
     computeCoefficients(set, coeffs);
 //    cout << "Set is: " << endl;
 //    for(const Scalar& el : set) {
@@ -361,15 +361,15 @@ void accumulateSet(const vector<reference_wrapper<Scalar>>& set, const BilinearM
 }
 
 //Just a wrapper to hide the "inG2" parameter from the client
-void accumulateSet(const vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
+void accumulateSet(const std::vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
         G& acc, ThreadPool& threadPool) {
     accumulateSet(set, publicKey, acc, false, threadPool);
 }
 
 /*-----------------------Private key witness generation-----------------------*/
 
-vector<flint::BigMod> multiplyLeftProducts(const vector<reference_wrapper<Scalar>>& set, const flint::BigMod& secretKey, const flint::BigInt& modulus) {
-    vector<flint::BigMod> leftProducts(set.size()+1, flint::BigMod(1, modulus));
+std::vector<flint::BigMod> multiplyLeftProducts(const std::vector<reference_wrapper<Scalar>>& set, const flint::BigMod& secretKey, const flint::BigInt& modulus) {
+    std::vector<flint::BigMod> leftProducts(set.size()+1, flint::BigMod(1, modulus));
     //Compute products (x_i + s) for the exponent of g left-to-right, saving each partial product
     flint::BigMod sum(modulus), element(modulus);
     for(size_t i = 1; i <= set.size(); i++) {
@@ -381,8 +381,8 @@ vector<flint::BigMod> multiplyLeftProducts(const vector<reference_wrapper<Scalar
     return leftProducts;
 }
 
-vector<flint::BigMod> multiplyRightProducts(const vector<reference_wrapper<Scalar>>& set, const flint::BigMod& secretKey, const flint::BigInt& modulus) {
-    vector<flint::BigMod> rightProducts(set.size()+1, flint::BigMod(1, modulus));
+std::vector<flint::BigMod> multiplyRightProducts(const std::vector<reference_wrapper<Scalar>>& set, const flint::BigMod& secretKey, const flint::BigInt& modulus) {
+    std::vector<flint::BigMod> rightProducts(set.size()+1, flint::BigMod(1, modulus));
     //Compute products (x_i + s) for the exponent of g right-to-left, saving each partial product
     flint::BigMod sum(modulus), element(modulus);
     for(int i = set.size()-1; i >= 0; i--) { //must be int not size_t so it can stop at 0
@@ -393,8 +393,8 @@ vector<flint::BigMod> multiplyRightProducts(const vector<reference_wrapper<Scala
     return rightProducts;
 }
 
-void witnessesForSet(const vector<reference_wrapper<Scalar>>& set, const Scalar& privKey,
-        G& base, vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool) {
+void witnessesForSet(const std::vector<reference_wrapper<Scalar>>& set, const Scalar& privKey,
+        G& base, std::vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool) {
     flint::BigInt modulus;
     LibConversions::getModulus(modulus);
     flint::BigMod sk(modulus);
@@ -402,13 +402,13 @@ void witnessesForSet(const vector<reference_wrapper<Scalar>>& set, const Scalar&
 
     //Compute products for the exponent separately in threads; the vectors will
     //also be initialized in the threads, since initialization is O(n)
-    future<vector<flint::BigMod>> leftFuture = threadPool.enqueue<vector<flint::BigMod>>(bind(
+    future<std::vector<flint::BigMod>> leftFuture = threadPool.enqueue<std::vector<flint::BigMod>>(bind(
             multiplyLeftProducts, cref(set), cref(sk), cref(modulus)));
-    future<vector<flint::BigMod>> rightFuture = threadPool.enqueue<vector<flint::BigMod>>(bind(
+    future<std::vector<flint::BigMod>> rightFuture = threadPool.enqueue<std::vector<flint::BigMod>>(bind(
             multiplyRightProducts, cref(set), cref(sk), cref(modulus)));
 
-    vector<flint::BigMod> leftProducts = leftFuture.get();
-    vector<flint::BigMod> rightProducts = rightFuture.get();
+    std::vector<flint::BigMod> leftProducts = leftFuture.get();
+    std::vector<flint::BigMod> rightProducts = rightFuture.get();
     //Generate exponent for element i's witness by multiplying left-product i with right-product i+1
     flint::BigMod power(modulus);
     for(size_t i = 0; i < set.size(); i++) {
@@ -424,20 +424,20 @@ void witnessesForSet(const vector<reference_wrapper<Scalar>>& set, const Scalar&
 /* Unfortunately, the only way to compute witnesses with the public key is
  * brute force: by calling accumulateSet on each subset {set - set[i]}
  */
-void witnessTask(const vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
+void witnessTask(const std::vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
         const int witnessIndex, unique_ptr<G>& witness) {
     //Don't use the thread pool this task is in to run accumulateSet, otherwise the tasks
     //created by accumulateSet might get blocked by the witnessTask itself
     static const size_t THREADS_IN_SUB_POOL = 16;
     static ThreadPool localPool(THREADS_IN_SUB_POOL);
     //Make a subset that excludes witnessIndex
-    vector<reference_wrapper<Scalar>> subset = vector<reference_wrapper<Scalar>>(set.begin(), set.begin()+witnessIndex);
+    std::vector<reference_wrapper<Scalar>> subset = std::vector<reference_wrapper<Scalar>>(set.begin(), set.begin()+witnessIndex);
     subset.insert(subset.end(), set.begin()+witnessIndex+1, set.end());
     accumulateSet(subset, publicKey, *(witness), true, localPool);
 }
-void witnessesForSet(const vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
-        vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool) {
-    vector<future<void>> futures;
+void witnessesForSet(const std::vector<reference_wrapper<Scalar>>& set, const BilinearMapKey::PublicKey& publicKey,
+        std::vector<unique_ptr<G>>& witnesses, ThreadPool& threadPool) {
+    std::vector<future<void>> futures;
     for(size_t i = 0; i < set.size(); i++) {
         futures.push_back(threadPool.enqueue<void>(
                 std::bind(witnessTask, cref(set), cref(publicKey), i, ref(witnesses.at(i)))

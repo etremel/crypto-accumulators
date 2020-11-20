@@ -1,4 +1,4 @@
-/* 
+/*
  * Duy Nguyen - duy@cs.brown.edu
  *         May 18, 2011
  */
@@ -37,7 +37,7 @@ int64_t getRandomNum(int64_t max){
 	return (seed % ((uint64_t)max));
 }
 
-void printSet(vector<int64_t> *s){
+void printSet(std::vector<int64_t> *s){
 	cout<<"[ Size = "<<s->size()<<" ] [ ";
 	for(size_t i=0; i<s->size(); i++){
 		cout<<s->at(i)<<" ";
@@ -45,7 +45,7 @@ void printSet(vector<int64_t> *s){
 	cout<<"]"<<endl;
 }
 
-void generateRandomSet(int64_t size, vector<int64_t> *s){
+void generateRandomSet(int64_t size, std::vector<int64_t> *s){
 	do{
 		s->push_back(getRandomNum(RAND_MAX));
 	} while (s->size() < (size_t)size);

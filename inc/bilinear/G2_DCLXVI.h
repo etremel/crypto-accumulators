@@ -35,8 +35,8 @@ class G2DCLXVI : public G{
 		void exportObject(void *obj) const;
 		size_t getSize() const;
 		char* getByteBuffer() const;
-        void readFromFile(istream &inFile);
-        void writeToFile(ostream &outFile) const;
+        void readFromFile(std::istream &inFile);
+        void writeToFile(std::ostream &outFile) const;
 
 		// Get the pointer to G2 object of the underlying DCLXVI implementation
         twistpoint_fp2_struct_t* getUnderlyingObj();
