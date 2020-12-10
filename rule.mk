@@ -1,11 +1,11 @@
-CC=cc -std=c99
+CC=cc -std=c11
 CPP=g++
 AR=ar
 CFLAGS=
 CFLAGS+=-g
 #CFLAGS+=-O3
 CFLAGS+=-Wall
-CFLAGS+=-std=c++14
+CFLAGS+=-std=c++17
 CFLAGS+=-no-pie
 CFLAGS+=-pthread
 CFLAGS+=-D_REENTRANT

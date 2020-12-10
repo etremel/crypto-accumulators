@@ -13,12 +13,11 @@
 namespace flint {
 
 class ArithmeticException : public std::runtime_error {
-    public:
-        explicit ArithmeticException(const std::string& what_msg)
-        : std::runtime_error(what_msg) {}
+public:
+    explicit ArithmeticException(const std::string& what_msg)
+            : std::runtime_error(what_msg) {}
 };
 
-}
-
+}  // namespace flint
 
 #endif /* ARITHMETICEXCEPTION_H_ */

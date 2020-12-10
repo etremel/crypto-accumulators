@@ -9,6 +9,7 @@
 #define LIBCONVERSIONS_H_
 
 #include <algorithm>
+#include <cstring>
 
 #include <flint/flint.h>
 
@@ -18,11 +19,11 @@
 #include <cryptopp/integer.h>
 
 extern "C" {
-    #include <string.h>
-    #include <scalar.h>
-    #include <openssl/bn.h>
-    #include <openssl/crypto.h>
+#include <scalar.h>
 }
+
+#include <openssl/bn.h>
+#include <openssl/crypto.h>
 
 namespace LibConversions {
 
@@ -37,8 +38,8 @@ void getModulus(flint::BigInt& modulus);
 void scalarToMpz(const scalar_t scalar, mpz_t mpz);
 void mpzToScalar(const mpz_t mpz, scalar_t scalar);
 
-void scalarToString(const scalar_t scalar, char *str);
-void stringToScalar(const char *str, scalar_t scalar);
+void scalarToString(const scalar_t scalar, char* str);
+void stringToScalar(const char* str, scalar_t scalar);
 
 /**
  * Converts a Scalar from DCXLVI to a FLINT BigMod, setting the BigMod's
@@ -47,7 +48,7 @@ void stringToScalar(const char *str, scalar_t scalar);
  * @param scalar the scalar
  * @param target the BigMod that should contain the scalar's value
  */
-void scalarToBigMod(const scalar_t& scalar, flint::BigMod &target);
+void scalarToBigMod(const scalar_t& scalar, flint::BigMod& target);
 void bigModToScalar(const flint::BigMod& bigmod, scalar_t& target);
 
 /**
@@ -91,9 +92,8 @@ void bytesToBigInt(const unsigned char* byteArray, int length, flint::BigInt& bi
  *         store the number in the string, into which the result will be
  *         placed.
  */
-void hexStringToBytes(const std::string &hexString, unsigned char *byteArray);
+void hexStringToBytes(const std::string& hexString, unsigned char* byteArray);
 
-}
-
+}  // namespace LibConversions
 
 #endif /* LIBCONVERSIONS_H_ */

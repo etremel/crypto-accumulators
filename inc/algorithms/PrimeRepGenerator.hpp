@@ -10,7 +10,6 @@
  * same interface.
  */
 class PrimeRepGenerator {
-
 public:
     PrimeRepGenerator();
     virtual ~PrimeRepGenerator() = 0;
@@ -24,4 +23,4 @@ public:
     virtual void genRepresentative(const flint::BigInt& element, flint::BigInt& representative) = 0;
 };
 
-#endif // PRIMEREPGENERATOR_H
+#endif  // PRIMEREPGENERATOR_H

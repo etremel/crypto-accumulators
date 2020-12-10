@@ -2,25 +2,24 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <flint/BigMod.hpp>
 #include <flint/BigInt.hpp>
+#include <flint/BigMod.hpp>
 
-#include <bilinear/Scalar_DCLXVI.hpp>
 #include <bilinear/G1_DCLXVI.hpp>
 #include <bilinear/G2_DCLXVI.hpp>
 #include <bilinear/GT_DCLXVI.hpp>
+#include <bilinear/Scalar_DCLXVI.hpp>
 
-#include <utils/Profiler.hpp>
 #include <utils/Pointers.hpp>
+#include <utils/Profiler.hpp>
 #include <utils/ThreadPool.hpp>
 //#include <utils/LibConversions.hpp>
 #include <utils/testutils.hpp>
 
 #include <algorithms/BilinearMapAccumulator.hpp>
-
 
 using testutils::print_hex;
 using namespace std;
@@ -30,9 +29,9 @@ namespace speedtest {
 void bilinearTest(int setSize);
 void bilinearPublicPrivateTest();
 
-}
+}  // namespace speedtest
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     int setSize;
     if(argc > 1) {
         setSize = atoi(argv[1]);
@@ -40,37 +39,36 @@ int main(int argc, char **argv) {
         setSize = 1000;
     }
 
-//    speedtest::saveElements(SET_SIZE, "randomSet" + to_string(SET_SIZE));
-//    speedtest::bilinearPublicPrivateTest();
+    // speedtest::saveElements(SET_SIZE, "randomSet" + to_string(SET_SIZE));
+    speedtest::bilinearPublicPrivateTest();
     speedtest::bilinearTest(setSize);
-//    speedtest::saveBigints(SET_SIZE, "randomBigints" + to_string(SET_SIZE));
+    // speedtest::saveBigints(SET_SIZE, "randomBigints" + to_string(SET_SIZE));
 
     return 0;
 }
 
 namespace speedtest {
 
-
 vector<unique_ptr<Scalar>> readScalars(string filename) {
     ifstream fileIn(filename, ios::binary);
     vector<unique_ptr<Scalar>> elements;
     while(fileIn.peek() != EOF) {
-        unique_ptr<Scalar> element = unique_new<ScalarDCLXVI>();
+        unique_ptr<Scalar> element = std::make_unique<ScalarDCLXVI>();
         element->readFromFile(fileIn);
         elements.push_back(move(element));
     }
-    return elements; //this looks like it will copy the whole vector, but the C++11 standard requires an implicit move constructor here (I think)
+    return elements;  //this looks like it will copy the whole vector, but the C++11 standard requires an implicit move constructor here (I think)
 }
 
 void bilinearPublicPrivateTest() {
     //Initialize LiDIA's global modulus
-//    LiDIA::bigint modulus;
-//    LibConversions::getModulus(modulus);
-//    LiDIA::bigmod::set_modulus(modulus);
+    // LiDIA::bigint modulus;
+    // LibConversions::getModulus(modulus);
+    // LiDIA::bigmod::set_modulus(modulus);
 
     //Accumulating this "set" will accumulate just the secret key s once
     vector<reference_wrapper<Scalar>> setZero;
-//    LiDIA::bigmod lidiaZero;
+    // LiDIA::bigmod lidiaZero;
     flint::BigInt flintZero(0);
     ScalarDCLXVI scalarZero(flintZero);
     setZero.push_back(scalarZero);
@@ -84,7 +82,7 @@ void bilinearPublicPrivateTest() {
 
     //Accumulating this "set" will accumulate s+1, the simplest polynomial
     vector<reference_wrapper<Scalar>> setOne;
-//    LiDIA::bigmod lidiaOne(1);
+    // LiDIA::bigmod lidiaOne(1);
     ScalarDCLXVI scalarOne(flint::BigMod(1));
     setOne.push_back(scalarOne);
 
@@ -222,25 +220,24 @@ void bilinearPublicPrivateTest() {
     print_hex(publicAccSp1.getByteBuffer(), publicAccSp1.getSize());
     cout << "g^(s+1): ";
     print_hex(gToSp1.getByteBuffer(), gToSp1.getSize());
-
 }
 
 void bilinearTest(int setSize) {
-//    cout << "Bilinear-Map Accumulator test:" << endl;
+    // cout << "Bilinear-Map Accumulator test:" << endl;
     //Initialize the thread pool for multithreading
     const int THREAD_POOL_SIZE = 16;
     ThreadPool threadPool(THREAD_POOL_SIZE);
 
-    vector<unique_ptr<Scalar>> set; //Holds the actual set
-    vector<reference_wrapper<Scalar>> setView; //A "view" of the set to pass to functions that observe it
+    vector<unique_ptr<Scalar>> set;             //Holds the actual set
+    vector<reference_wrapper<Scalar>> setView;  //A "view" of the set to pass to functions that observe it
     //Generate random numbers to accumulate
-//    for(int c = 0; c < setSize; c++) {
-//        unique_ptr<Scalar> element = unique_new<ScalarDCLXVI>();
-//        element->generateRandom();
-//        set.push_back(move(element));
-//        setView.push_back(*(set.back()));
-//    }
-//    cout << "Generated " << set.size() << " random elements." << endl;
+    // for(int c = 0; c < setSize; c++) {
+    //     unique_ptr<Scalar> element = std::make_unique<ScalarDCLXVI>();
+    //     element->generateRandom();
+    //     set.push_back(move(element));
+    //     setView.push_back(*(set.back()));
+    // }
+    cout << "Generated " << set.size() << " random elements." << endl;
     //Read a random set from a file
     set = readScalars("randomScalars" + to_string(setSize));
     for(unique_ptr<Scalar>& element : set) {
@@ -254,8 +251,8 @@ void bilinearTest(int setSize) {
     double keyStart = Profiler::getCurrentTime();
     BilinearMapAccumulator::genKey(vector<vector<reference_wrapper<Scalar>>>(), setSize, key, threadPool);
     double keyEnd = Profiler::getCurrentTime();
-//    cout << "Key generation took " << (keyEnd-keyStart) << " seconds" << endl;
-    cout << (keyEnd-keyStart) << endl;
+    // cout << "Key generation took " << (keyEnd-keyStart) << " seconds" << endl;
+    cout << (keyEnd - keyStart) << endl;
 
     //Output a "0" for time to generate prime representatives (for parity with RSA speed test)
     cout << "0" << endl;
@@ -264,16 +261,16 @@ void bilinearTest(int setSize) {
     double accStart = Profiler::getCurrentTime();
     BilinearMapAccumulator::accumulateSet(setView, key.getSecretKey(), acc);
     double accEnd = Profiler::getCurrentTime();
-//    cout << "Accumulated " << set.size() << " elements in " << (accEnd-accStart) << " seconds with private key" << endl;
-    cout << (accEnd-accStart) << endl;
+    // cout << "Accumulated " << set.size() << " elements in " << (accEnd-accStart) << " seconds with private key" << endl;
+    cout << (accEnd - accStart) << endl;
 
     //Accumulate the same values using only the public information
     G1DCLXVI accPub;
     double accPubStart = Profiler::getCurrentTime();
     BilinearMapAccumulator::accumulateSet(setView, key.getPublicKey(), accPub, threadPool);
     double accPubEnd = Profiler::getCurrentTime();
-//    cout << "Accumulated " << set.size() << " elements in " << (accPubEnd-accPubStart) << " seconds with public key" << endl;
-    cout << (accPubEnd-accPubStart) << endl;
+    // cout << "Accumulated " << set.size() << " elements in " << (accPubEnd-accPubStart) << " seconds with public key" << endl;
+    cout << (accPubEnd - accPubStart) << endl;
 
     if(!acc.isEqual(accPub)) {
         cout << "Error! Private and public accumulations do not match!" << endl;
@@ -292,9 +289,8 @@ void bilinearTest(int setSize) {
     double witStart = Profiler::getCurrentTime();
     BilinearMapAccumulator::witnessesForSet(setView, key.getSecretKey(), witnessBase, witnesses, threadPool);
     double witEnd = Profiler::getCurrentTime();
-//    cout << "Generated " << witnesses.size() << " witnesses in " << (witEnd-witStart) << " seconds with private key" << endl;
-    cout << (witEnd-witStart) << endl;
-
+    // cout << "Generated " << witnesses.size() << " witnesses in " << (witEnd-witStart) << " seconds with private key" << endl;
+    cout << (witEnd - witStart) << endl;
 
     //Generate witnesses with only the public information
     vector<unique_ptr<G>> witnessesPublic;
@@ -304,9 +300,8 @@ void bilinearTest(int setSize) {
     double witPubStart = Profiler::getCurrentTime();
     BilinearMapAccumulator::witnessesForSet(setView, key.getPublicKey(), witnessesPublic, threadPool);
     double witPubEnd = Profiler::getCurrentTime();
-//    cout << "Generated " << witnesses.size() << " witnesses in " << (witPubEnd-witPubStart) << " seconds with public key" << endl;
-    cout << (witPubEnd-witPubStart) << endl;
-
+    // cout << "Generated " << witnesses.size() << " witnesses in " << (witPubEnd-witPubStart) << " seconds with public key" << endl;
+    cout << (witPubEnd - witPubStart) << endl;
 
     //Verify the values with the witnesses
     double verifyStart = Profiler::getCurrentTime();
@@ -317,8 +312,8 @@ void bilinearTest(int setSize) {
         }
     }
     double verifyEnd = Profiler::getCurrentTime();
-//    cout << "Verified " << witnesses.size() << " elements in " << (verifyEnd-verifyStart) << " seconds against private accumulator" << endl;
-    cout << (verifyEnd-verifyStart) << endl;
+    // cout << "Verified " << witnesses.size() << " elements in " << (verifyEnd-verifyStart) << " seconds against private accumulator" << endl;
+    cout << (verifyEnd - verifyStart) << endl;
 
     //Verify the public-key witnesses, just in case they're different
     double verifyPubStart = Profiler::getCurrentTime();
@@ -329,14 +324,10 @@ void bilinearTest(int setSize) {
         }
     }
     double verifyPubEnd = Profiler::getCurrentTime();
-//    cout << "Verified " << witnessesPublic.size() << " elements in " << (verifyPubEnd-verifyPubStart) << " seconds against public accumulator" << endl;
+    // cout << "Verified " << witnessesPublic.size() << " elements in " << (verifyPubEnd-verifyPubStart) << " seconds against public accumulator" << endl;
     //This actually doesn't need to get measured and logged, since the time will
     //be the same as for verification with the private-key witnesses. It only
     //needs to run to guarantee correctness.
-
 }
 
-
-
-}
-
+}  // namespace speedtest

@@ -7,8 +7,8 @@
 
 #include <sstream>
 
-#include <flint/BigMod.hpp>
 #include <flint/ArithmeticException.hpp>
+#include <flint/BigMod.hpp>
 
 namespace flint {
 
@@ -89,7 +89,7 @@ BigMod& BigMod::power(const BigInt& exponent) {
 
 bool BigMod::equals(const BigMod& other) const {
     return fmpz_equal(modulus, other.modulus)
-            && fmpz_equal(value, other.value);
+           && fmpz_equal(value, other.value);
 }
 
 bool BigMod::assign(const char* string) {
@@ -208,7 +208,6 @@ void BigMod::setModulus(const BigInt& modulus) {
 
 /* -------------------------- End class BigMod ------------------------------ */
 
-
 BigMod operator+(const BigMod& lhs, const BigMod& rhs) {
     return BigMod(lhs) += rhs;
 }
@@ -320,19 +319,17 @@ void power(const BigMod& base, const BigInt& exponent, BigMod& result) {
     fmpz_set(result.modulus, base.modulus);
 }
 
-} //end namespace flint
+}  //end namespace flint
 
 std::ostream& operator<<(std::ostream& os, const flint::BigMod& obj) {
-  os << obj.toString();
-  return os;
+    os << obj.toString();
+    return os;
 }
 
 std::istream& operator>>(std::istream& is, flint::BigMod& obj) {
-  std::string inString;
-  is >> inString;
-  if(!obj.assign(inString))
-    is.setstate(std::ios::failbit);
-  return is;
+    std::string inString;
+    is >> inString;
+    if(!obj.assign(inString))
+        is.setstate(std::ios::failbit);
+    return is;
 }
-
-

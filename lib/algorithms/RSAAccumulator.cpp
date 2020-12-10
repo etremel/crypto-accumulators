@@ -3,66 +3,61 @@
  * March 2013
  */
 
+#include <algorithm>
+#include <functional>
 #include <thread>
 #include <vector>
-#include <functional>
-#include <algorithm>
 
-#include <utils/Pointers.hpp>
 #include <utils/LibConversions.hpp>
+#include <utils/Pointers.hpp>
 #include <utils/ThreadPool.hpp>
 
-#include <algorithms/PrimeRepGenerator.hpp>
 #include <algorithms/OraclePrimeRep.hpp>
+#include <algorithms/PrimeRepGenerator.hpp>
 #include <algorithms/RSAAccumulator.hpp>
 
-#include <cryptopp/rsa.h>
 #include <cryptopp/osrng.h>
+#include <cryptopp/rsa.h>
 
-using std::max;
-using std::vector;
-using std::unique_ptr;
-using std::ref;
-using std::cref;
 using std::future;
-using std::bind;
+using std::vector;
 
 namespace RSAAccumulator {
 
 /*-------------------------------Key Generation-------------------------------*/
 
-void genKey(const unsigned int elementBits, const unsigned int modulusBits, RSAKey &key) {
+void genKey(const unsigned int elementBits, const unsigned int modulusBits, RSAKey& key) {
     unsigned int modBits;
-    if (modulusBits == 0){
-        modBits = 3*elementBits+1;
+    if(modulusBits == 0) {
+        modBits = 3 * elementBits + 1;
     } else if(elementBits == 0) {
         modBits = modulusBits;
     } else {
-        modBits = max(3*elementBits+1, modulusBits);
+        modBits = std::max(3 * elementBits + 1, modulusBits);
     }
     //Use Crypto++ to generate an RSA modulus
     CryptoPP::AutoSeededRandomPool random;
     CryptoPP::RSA::PrivateKey rsaKey;
     rsaKey.GenerateRandomWithKeySize(random, modBits);
     LibConversions::CryptoPPToFlint(rsaKey.GetModulus(), key.getPublicKey().rsaModulus);
-    LibConversions::CryptoPPToFlint(rsaKey.GetPrime1(), key.getSecretKey().first);
-    LibConversions::CryptoPPToFlint(rsaKey.GetPrime2(), key.getSecretKey().second);
+    LibConversions::CryptoPPToFlint(rsaKey.GetPrime1(), key.getSecretKey().p);
+    LibConversions::CryptoPPToFlint(rsaKey.GetPrime2(), key.getSecretKey().q);
     //Apparently, this is a reasonable number to hard-code for the base
     key.getPublicKey().base = flint::BigMod(65537, key.getPublicKey().rsaModulus);
     //For now, just hard-code in which PrimeRepGenerator to instantiate...
-    key.getPublicKey().primeRepGenerator = unique_new<OraclePrimeRep>();
+    key.getPublicKey().primeRepGenerator = std::make_unique<OraclePrimeRep>();
 }
 
 /*-------------------------------Representatives------------------------------*/
 
-void genRepresentatives(const vector<flint::BigInt> &set, PrimeRepGenerator &repGen, vector<flint::BigInt>& reps, ThreadPool& threadPool) {
+void genRepresentatives(const vector<flint::BigInt>& set, PrimeRepGenerator& repGen,
+                        vector<flint::BigInt>& reps, ThreadPool& threadPool) {
     vector<future<void>> futures;
     for(vector<flint::BigMod>::size_type element = 0; element < set.size(); element++) {
         //Submit repGen.genRepresentative(set[element], reps[element]) to the thread pool
-        futures.push_back(threadPool.enqueue<void>(
-                bind(&PrimeRepGenerator::genRepresentative, &repGen,
-                        ref(set.at(element)), ref(reps.at(element)))
-        ));
+        futures.push_back(threadPool.enqueue<void>([&, element]() {
+            repGen.genRepresentative(set.at(element), reps.at(element));
+        }));
     }
     for(auto& future : futures) {
         future.get();
@@ -71,8 +66,9 @@ void genRepresentatives(const vector<flint::BigInt> &set, PrimeRepGenerator &rep
 
 /*--------------------------Private key accumulation--------------------------*/
 
-void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey &key, flint::BigMod &accumulator, ThreadPool& threadPool) {
-    flint::BigInt phiOfN = (key.getSecretKey().first-1) * (key.getSecretKey().second-1);
+void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey& key, flint::BigMod& accumulator,
+                   ThreadPool& threadPool) {
+    flint::BigInt phiOfN = (key.getSecretKey().p - 1) * (key.getSecretKey().q - 1);
     //The accumulator's exponent is the product of all the representatives mod phi(N)
     flint::BigMod exponent(1, phiOfN);
     for(auto rep : reps) {
@@ -97,7 +93,7 @@ void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey &key, flint::
  *        witness, if an element is skipped.
  */
 flint::BigMod accumulateSetHelper(const vector<flint::BigInt>& reps, const size_t indexToSkip,
-        const RSAKey::PublicKey& publicKey) {
+                                  const RSAKey::PublicKey& publicKey) {
     flint::BigMod output;
     //Ensure the modulus is set correctly
     output.setModulus(publicKey.rsaModulus);
@@ -116,7 +112,7 @@ flint::BigMod accumulateSetHelper(const vector<flint::BigInt>& reps, const size_
     return output;
 }
 
-void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey::PublicKey& publicKey, flint::BigMod &accumulator) {
+void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey::PublicKey& publicKey, flint::BigMod& accumulator) {
     //Just wrap the helper, hiding the "indexToSkip" parameter
     accumulator = accumulateSetHelper(reps, reps.size(), publicKey);
 }
@@ -125,37 +121,41 @@ void accumulateSet(const vector<flint::BigInt>& reps, const RSAKey::PublicKey& p
 
 //Compute products for the witness exponents left-to-right, saving each partial product
 vector<flint::BigMod> multiplyLeftProducts(const vector<flint::BigInt>& reps, const flint::BigInt& phiOfN) {
-    vector<flint::BigMod> leftProducts(reps.size()+1, flint::BigMod(1, phiOfN));
+    vector<flint::BigMod> leftProducts(reps.size() + 1, flint::BigMod(1, phiOfN));
     for(vector<flint::BigMod>::size_type i = 1; i <= reps.size(); i++) {
-        leftProducts.at(i) = leftProducts.at(i-1) * reps.at(i-1);
+        leftProducts.at(i) = leftProducts.at(i - 1) * reps.at(i - 1);
     }
     return leftProducts;
 }
 
 //Compute products for the witness exponents right-to-left, saving each partial product
 vector<flint::BigMod> multiplyRightProducts(const vector<flint::BigInt>& reps, const flint::BigInt& phiOfN) {
-    vector<flint::BigMod> rightProducts(reps.size()+1, flint::BigMod(1, phiOfN));
-    for(vector<flint::BigMod>::size_type i = reps.size()-1; i != (vector<flint::BigMod>::size_type)-1; i--) {
-        rightProducts.at(i) = rightProducts.at(i+1) * reps.at(i);
+    vector<flint::BigMod> rightProducts(reps.size() + 1, flint::BigMod(1, phiOfN));
+    for(vector<flint::BigMod>::size_type i = reps.size() - 1; i != (vector<flint::BigMod>::size_type) - 1; i--) {
+        rightProducts.at(i) = rightProducts.at(i + 1) * reps.at(i);
     }
     return rightProducts;
 }
 
 //Holds onto the temporary exponent so it doesn't go out of scope, and resolves the ambiguous overload to power
-void powerWrapper(const flint::BigMod base, const flint::BigMod& leftProduct, const flint::BigMod& rightProduct, flint::BigMod& witness) {
+void powerWrapper(const flint::BigMod base, const flint::BigMod& leftProduct,
+                  const flint::BigMod& rightProduct, flint::BigMod& witness) {
     flint::BigMod exponent = leftProduct * rightProduct;
     flint::power(base, exponent.getMantissa(), witness);
 }
 
-void witnessesForSet(const vector<flint::BigInt> &reps, const RSAKey &key, vector<flint::BigMod> &witnesses, ThreadPool& threadPool) {
-    flint::BigInt phiOfN = (key.getSecretKey().first-1) * (key.getSecretKey().second-1);
+void witnessesForSet(const vector<flint::BigInt>& reps, const RSAKey& key, vector<flint::BigMod>& witnesses,
+                     ThreadPool& threadPool) {
+    flint::BigInt phiOfN = (key.getSecretKey().p - 1) * (key.getSecretKey().q - 1);
     //Compute left and right products in threads.
     //The vectors will be initialized in the threads,
     //since initialization is O(n) and can be done in parallel
-    future<vector<flint::BigMod>> leftFuture = threadPool.enqueue<vector<flint::BigMod>>(bind(
-            multiplyLeftProducts, cref(reps), cref(phiOfN)));
-    future<vector<flint::BigMod>> rightFuture = threadPool.enqueue<vector<flint::BigMod>>(bind(
-            multiplyRightProducts, cref(reps), cref(phiOfN)));
+    future<vector<flint::BigMod>> leftFuture = threadPool.enqueue<vector<flint::BigMod>>([&]() {
+        return multiplyLeftProducts(reps, phiOfN);
+    });
+    future<vector<flint::BigMod>> rightFuture = threadPool.enqueue<vector<flint::BigMod>>([&]() {
+        return multiplyRightProducts(reps, phiOfN);
+    });
     //Wait for both threads to finish
     vector<flint::BigMod> leftProducts = leftFuture.get();
     vector<flint::BigMod> rightProducts = rightFuture.get();
@@ -163,38 +163,36 @@ void witnessesForSet(const vector<flint::BigInt> &reps, const RSAKey &key, vecto
     vector<future<void>> powerResults;
     for(vector<flint::BigMod>::size_type i = 0; i < reps.size(); i++) {
         witnesses.at(i).setModulus(key.getPublicKey().rsaModulus);
-        powerResults.push_back(threadPool.enqueue<void>(bind(
-                powerWrapper, cref(key.getPublicKey().base), cref(leftProducts.at(i)), cref(rightProducts.at(i+1)), ref(witnesses.at(i))
-                )));
+        powerResults.push_back(threadPool.enqueue<void>([&, i]() {
+            powerWrapper(key.getPublicKey().base, leftProducts.at(i), rightProducts.at(i + 1), witnesses.at(i));
+        }));
     }
     for(auto& future : powerResults) {
         future.get();
     }
-
 }
 
 /*------------------------Public key witness generation-----------------------*/
 
 void witnessesForSet(const std::vector<flint::BigInt>& reps, const RSAKey::PublicKey& publicKey,
-        vector<flint::BigMod>& witnesses, ThreadPool& threadPool) {
+                     vector<flint::BigMod>& witnesses, ThreadPool& threadPool) {
     vector<std::future<flint::BigMod>> futures;
     //Submit a task for each witness
     for(size_t witnessIndex = 0; witnessIndex < reps.size(); witnessIndex++) {
         futures.push_back(threadPool.enqueue<flint::BigMod>(
-                bind(accumulateSetHelper, cref(reps), witnessIndex,
-                        cref(publicKey))
-        ));
+                [&reps, &publicKey, witnessIndex]() {
+                    return accumulateSetHelper(reps, witnessIndex, publicKey);
+                }));
     }
     //Wait for them all to finish
     for(size_t witnessIndex = 0; witnessIndex < reps.size(); witnessIndex++) {
         witnesses.at(witnessIndex) = futures.at(witnessIndex).get();
     }
-
 }
 
 /*--------------------------------Verification--------------------------------*/
 
-bool verify(const flint::BigInt& element, const flint::BigMod &witness, const flint::BigMod &accumulator, const RSAKey::PublicKey &pubKey) {
+bool verify(const flint::BigInt& element, const flint::BigMod& witness, const flint::BigMod& accumulator, const RSAKey::PublicKey& pubKey) {
     if(witness.getModulus() != pubKey.rsaModulus || accumulator.getModulus() != pubKey.rsaModulus) {
         std::cout << "Verification failed due to modulus mismatch. Witness modulus was ";
         std::cout << witness.getModulus() << std::endl;
@@ -213,6 +211,4 @@ bool verify(const flint::BigInt& element, const flint::BigMod &witness, const fl
     return valid;
 }
 
-
-
-}
+}  // namespace RSAAccumulator

@@ -1,19 +1,13 @@
 
-#include <utils/Pointers.hpp>
 #include <algorithms/RSAKey.hpp>
 
-using std::pair;
-
-RSAKey::RSAKey() {
-    _secretKey = unique_new<pair<flint::BigInt,flint::BigInt>>();
-    _publicKey = std::make_shared<PublicKey>();
-}
+RSAKey::RSAKey() : _secretKey(std::make_unique<SecretKey>()),
+                   _publicKey(std::make_shared<PublicKey>()) {}
 
 RSAKey::~RSAKey() {
-
 }
 
-pair<flint::BigInt, flint::BigInt>& RSAKey::getSecretKey() const {
+RSAKey::SecretKey& RSAKey::getSecretKey() const {
     return *(_secretKey);
 }
 

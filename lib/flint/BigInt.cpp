@@ -5,15 +5,14 @@
  *      Author: etremel
  */
 
+#include <cstdio>
+#include <flint/fmpz.h>
 #include <sstream>
 #include <string>
 #include <time.h>
-#include <cstdio>
-#include <flint/fmpz.h>
 
 #include "flint/BigInt.hpp"
 
-using std::string;
 
 namespace flint {
 
@@ -34,7 +33,6 @@ BigInt::BigInt(fmpz_t&& fmpz) {
     fmpz_init_set(value, fmpz);
     fmpz_clear(fmpz);
 }
-
 
 BigInt::BigInt(const BigInt& other) {
     fmpz_init_set(value, other.value);
@@ -169,23 +167,23 @@ bool BigInt::equals(const BigInt& other) const {
 bool BigInt::assign(const char* string) {
     //fmpz_set_str returns 0 on success, but 0 = FALSE in C
     //Also, it does not modify its input string, but it doesn't declare it const
-    return(!fmpz_set_str(value, const_cast<char*>(string), 10));
+    return (!fmpz_set_str(value, const_cast<char*>(string), 10));
 }
 
 bool BigInt::assign(const std::string& string) {
     return assign(string.c_str());
 }
 
-string BigInt::toString() const {
+std::string BigInt::toString() const {
     char* cString = fmpz_get_str(nullptr, 10, value);
-    string str(cString);
+    std::string str(cString);
     delete[] cString;
     return str;
 }
 
-string BigInt::toHex() const {
+std::string BigInt::toHex() const {
     char* cString = fmpz_get_str(nullptr, 16, value);
-    string str(cString);
+    std::string str(cString);
     delete[] cString;
     return str;
 }
@@ -273,18 +271,17 @@ void abs(const BigInt& input, BigInt& output) {
     fmpz_abs(output.value, input.value);
 }
 
-} //end namespace flint
+}  //end namespace flint
 
 std::ostream& operator<<(std::ostream& os, const flint::BigInt& obj) {
-  os << obj.toString();
-  return os;
+    os << obj.toString();
+    return os;
 }
 
 std::istream& operator>>(std::istream& is, flint::BigInt& obj) {
-  std::string word;
-  is >> word;
-  if(!obj.assign(word))
-    is.setstate(std::ios::failbit);
-  return is;
+    std::string word;
+    is >> word;
+    if(!obj.assign(word))
+        is.setstate(std::ios::failbit);
+    return is;
 }
-

@@ -10,7 +10,6 @@
  * padding bits and finds the next highest prime from the oracle's output.
  */
 class OraclePrimeRep : public PrimeRepGenerator {
-
 public:
     OraclePrimeRep();
     ~OraclePrimeRep();
@@ -29,4 +28,4 @@ private:
     static const int PADDING_LENGTH = 12;
 };
 
-#endif // ORACLEPRIMEREP_H
+#endif  // ORACLEPRIMEREP_H

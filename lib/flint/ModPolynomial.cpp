@@ -5,8 +5,8 @@
  *      Author: etremel
  */
 
-#include <flint/ModPolynomial.hpp>
 #include <flint/ArithmeticException.hpp>
+#include <flint/ModPolynomial.hpp>
 
 namespace flint {
 
@@ -156,7 +156,7 @@ void subtract(const ModPolynomial& lhs, const ModPolynomial& rhs, ModPolynomial&
 
 void multiply(const ModPolynomial& lhs, const ModPolynomial& rhs, ModPolynomial& result) {
     if(!fmpz_equal(fmpz_mod_poly_modulus(lhs.mod_poly), fmpz_mod_poly_modulus(rhs.mod_poly)))
-         throw ArithmeticException("Polynomial multiplication error: operands have different moduli.");
+        throw ArithmeticException("Polynomial multiplication error: operands have different moduli.");
     fmpz_set(fmpz_mod_poly_modulus(result.mod_poly), fmpz_mod_poly_modulus(lhs.mod_poly));
     fmpz_mod_poly_mul(result.mod_poly, lhs.mod_poly, rhs.mod_poly);
 }
@@ -191,7 +191,7 @@ void swap(ModPolynomial& first, ModPolynomial& second) noexcept {
     fmpz_mod_poly_swap(first.mod_poly, second.mod_poly);
 }
 
-}
+}  // namespace flint
 
 //std::ostream& operator<<(std::ostream& os, const ModPolynomial& obj) {
 //
@@ -200,4 +200,3 @@ void swap(ModPolynomial& first, ModPolynomial& second) noexcept {
 //std::istream& operator>>(std::istream& is, ModPolynomial& obj) {
 //
 //}
-
