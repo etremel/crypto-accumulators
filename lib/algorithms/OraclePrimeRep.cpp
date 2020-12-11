@@ -49,7 +49,7 @@ void OraclePrimeRep::genRepresentative(const flint::BigInt& element, flint::BigI
     size_t byteLength = element.bitLength() / 8;
     if(element.bitLength() % 8 != 0)
         byteLength++;
-//    cout << "Getting representative for " << element << endl;
+    // cout << "Getting representative for " << element << endl;
     unsigned char bytesToHash[byteLength + SALT_BYTES];
     //Initializing this array is very important because the element and salt may not exactly fill it
     memset(bytesToHash, 0, byteLength + SALT_BYTES);
@@ -60,23 +60,23 @@ void OraclePrimeRep::genRepresentative(const flint::BigInt& element, flint::BigI
     minst_rand_64 randEngine(elementTruncated);
     std::independent_bits_engine<minst_rand_64, 16, uint16_t> rand16bits(randEngine);
     uint16_t salt = rand16bits();
-//    cout << "  Generated random salt: " << salt << endl;
+    // cout << "  Generated random salt: " << salt << endl;
     //Append them to the byte array
     std::copy(reinterpret_cast<const char*>(&salt), reinterpret_cast<const char*>(&salt) + sizeof(salt), &bytesToHash[byteLength]);
     //Hash the element+salt
-//    cout << "  Hashing bytes: ";
-//    testutils::print_hex(bytesToHash, byteLength+SALT_BYTES);
+    // cout << "  Hashing bytes: ";
+    // testutils::print_hex(bytesToHash, byteLength+SALT_BYTES);
     unsigned char hashedBytes[CryptoPP::SHA256::DIGESTSIZE];
     CryptoPP::SHA256().CalculateDigest(hashedBytes, bytesToHash, byteLength + SALT_BYTES);
-//    cout << "  Result of hash: ";
-//    testutils::print_hex(hashedBytes, CryptoPP::SHA256::DIGESTSIZE);
+    // cout << "  Result of hash: ";
+    // testutils::print_hex(hashedBytes, CryptoPP::SHA256::DIGESTSIZE);
     flint::BigInt hashedElement;
     LibConversions::bytesToBigInt(hashedBytes, CryptoPP::SHA256::DIGESTSIZE, hashedElement);
     //Add some zeroes in the lower-order bits, then find the next prime
-//    cout << "Bitshifting hash " << hex << hashedElement << endl;
+    // cout << "Bitshifting hash " << hex << hashedElement << endl;
     hashedElement <<= PADDING_LENGTH;
-//    cout << "  Bitshifted hash: " << hex << hashedElement << dec << endl;
-//    cout << "Finding next prime..." << endl;
+    // cout << "  Bitshifted hash: " << hex << hashedElement << dec << endl;
+    // cout << "Finding next prime..." << endl;
     representative = hashedElement.nextPrime();
-//    cout << "  Next probable prime: " << representative << endl;
+    // cout << "  Next probable prime: " << representative << endl;
 }

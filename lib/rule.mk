@@ -1,6 +1,6 @@
 include $(TOPDIR)/rule.mk
 
-CFLAGS+=$(DCLXVI_INC) $(CRYPTOPP_INC)
+CFLAGS+=$(DCLXVI_INC)
 
 LIBRARY=$(ACCUMLIB)
 

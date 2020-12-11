@@ -1,12 +1,12 @@
 
 SUBDIRS=utils bilinear algorithms suffix flint
 
-.PHONY:	asclib $(SUBDIRS)
+.PHONY:	accumlib $(SUBDIRS)
 
 all:
-	$(MAKE) asclib
+	$(MAKE) accumlib
 
-asclib: $(SUBDIRS)
+accumlib: $(SUBDIRS)
 
 $(SUBDIRS):
 	$(MAKE) -C $@

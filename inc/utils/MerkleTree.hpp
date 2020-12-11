@@ -12,8 +12,6 @@
 #include <fstream>
 #include <iostream>
 
-#include <utils/SHA256.hpp>
-
 class HashNode {
 public:
     int _offset;

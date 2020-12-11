@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 #include <utils/MerkleTree.hpp>
+#include <utils/SHA256.hpp>
 
 using namespace std;
 
@@ -23,15 +24,15 @@ void MerkleTree::readFullTreeFromFile(const char* fName) {
     _tree.clear();
     _rootHash.clear();
 
-    char hash[SHA256_DIGEST_LENGTH];
+    char hash[SHA256::DIGEST_LENGTH];
     vector<unsigned char>* node;
     while(true) {
-        iStream.read(hash, SHA256_DIGEST_LENGTH);
+        iStream.read(hash, SHA256::DIGEST_LENGTH);
         if(iStream.eof()) {
             break;
         }
-        node = new vector<unsigned char>(SHA256_DIGEST_LENGTH, 0);
-        for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        node = new vector<unsigned char>(SHA256::DIGEST_LENGTH, 0);
+        for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
             node->at(i) = (unsigned char)hash[i];
         }
         _tree.push_back(*node);
@@ -52,9 +53,9 @@ void MerkleTree::readTreeInfoFromFile(const char* fName) {
 
     iStream.read((char*)&_height, 4);
 
-    char hash[SHA256_DIGEST_LENGTH];
-    iStream.read(hash, SHA256_DIGEST_LENGTH);
-    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+    char hash[SHA256::DIGEST_LENGTH];
+    iStream.read(hash, SHA256::DIGEST_LENGTH);
+    for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
         _rootHash.push_back((unsigned char)hash[i]);
     }
     iStream.close();
@@ -65,7 +66,7 @@ void MerkleTree::writeTreeToFiles(const char* fullTreeFName, const char* treeInf
     ofstream sHashStream;
     sHashStream.open(fullTreeFName, ios::out | ios::binary);
     for(std::size_t i = 0; i < _tree.size(); i++) {
-        for(int j = 0; j < SHA256_DIGEST_LENGTH; j++) {
+        for(int j = 0; j < SHA256::DIGEST_LENGTH; j++) {
             unsigned char c = _tree[i][j];
             sHashStream.write((char*)&c, 1);
         }
@@ -76,7 +77,7 @@ void MerkleTree::writeTreeToFiles(const char* fullTreeFName, const char* treeInf
     ofstream cHashStream;
     cHashStream.open(treeInfoFName, ios::out | ios::binary);
     cHashStream.write((char*)&_height, 4);
-    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+    for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
         unsigned char c = _rootHash[i];
         cHashStream.write((char*)&c, 1);
     }
@@ -114,12 +115,12 @@ void MerkleTree::constructTree(const vector<vector<unsigned char> >& hashes) {
     // There may be other empty nodes in case the number of hashes is not power of 2
     for(; offset < treeSize; offset++) {
         //cout<<"Empty node "<<offset<<endl;
-        _tree[offset] = *(new vector<unsigned char>(SHA256_DIGEST_LENGTH, 0));
+        _tree[offset] = *(new vector<unsigned char>(SHA256::DIGEST_LENGTH, 0));
     }
 
     // Fill higher level hashes from leaves
     int parentOffset;
-    char parentHash[2 * SHA256_DIGEST_LENGTH];
+    char parentHash[2 * SHA256::DIGEST_LENGTH];
     for(int level = _height; level > 0; level--) {
         //cout<<"Filling level "<<level<<endl;
         for(offset = int(pow(2, level) - 1); offset < int(pow(2, level + 1) - 2); offset += 2) {
@@ -127,11 +128,11 @@ void MerkleTree::constructTree(const vector<vector<unsigned char> >& hashes) {
             getParentOffset(offset, level, parentOffset);
             //cout<<"\t\tparentOffset "<<parentOffset<<endl;
 
-            for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
                 parentHash[i] = char(_tree[offset][i]);
-                parentHash[i + SHA256_DIGEST_LENGTH] = char(_tree[offset + 1][i]);
+                parentHash[i + SHA256::DIGEST_LENGTH] = char(_tree[offset + 1][i]);
             }
-            MySHA256::getInstance()->computeDigest(parentHash, 2 * SHA256_DIGEST_LENGTH, _tree[parentOffset]);
+            SHA256::computeDigest(parentHash, 2 * SHA256::DIGEST_LENGTH, _tree[parentOffset]);
         }
     }
 
@@ -140,7 +141,7 @@ void MerkleTree::constructTree(const vector<vector<unsigned char> >& hashes) {
 
 void MerkleTree::updateHash(int offset, const vector<unsigned char>& digest) {
     int parentOffset;
-    char parentHash[2 * SHA256_DIGEST_LENGTH];
+    char parentHash[2 * SHA256::DIGEST_LENGTH];
 
     offset += int(pow(2, _height) - 1);
     _tree[offset] = digest;
@@ -152,11 +153,11 @@ void MerkleTree::updateHash(int offset, const vector<unsigned char>& digest) {
     for(int level = _height; level > 0; level--) {
         getParentOffset(offset, level, parentOffset);
 
-        for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
             parentHash[i] = char(_tree[offset][i]);
-            parentHash[i + SHA256_DIGEST_LENGTH] = char(_tree[offset + 1][i]);
+            parentHash[i + SHA256::DIGEST_LENGTH] = char(_tree[offset + 1][i]);
         }
-        MySHA256::getInstance()->computeDigest(parentHash, 2 * SHA256_DIGEST_LENGTH, _tree[parentOffset]);
+        SHA256::computeDigest(parentHash, 2 * SHA256::DIGEST_LENGTH, _tree[parentOffset]);
     }
 
     _rootHash = _tree[0];
@@ -199,7 +200,7 @@ void MerkleTree::getHashes(int index, vector<HashNode>& hashes) const {
 bool MerkleTree::checkHashes(const vector<HashNode>& hashes) const {
     int i = 0;
     HashNode *a, *b, parent;
-    char hashContent[2 * SHA256_DIGEST_LENGTH];
+    char hashContent[2 * SHA256::DIGEST_LENGTH];
 
     if(_height != hashes.size() - 2) {
         return false;
@@ -209,25 +210,25 @@ bool MerkleTree::checkHashes(const vector<HashNode>& hashes) const {
     b = (HashNode*)&hashes[i++];
     for(int level = _height; level > 0; level--) {
         if(a->_offset < b->_offset) {
-            for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
                 hashContent[i] = char(a->_hash[i]);
-                hashContent[i + SHA256_DIGEST_LENGTH] = char(b->_hash[i]);
+                hashContent[i + SHA256::DIGEST_LENGTH] = char(b->_hash[i]);
             }
         } else {
-            for(int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            for(int i = 0; i < SHA256::DIGEST_LENGTH; i++) {
                 hashContent[i] = char(b->_hash[i]);
-                hashContent[i + SHA256_DIGEST_LENGTH] = char(a->_hash[i]);
+                hashContent[i + SHA256::DIGEST_LENGTH] = char(a->_hash[i]);
             }
         }
 
         getParentOffset(a->_offset, level - 1, parent._offset);
-        MySHA256::getInstance()->computeDigest(hashContent, 2 * SHA256_DIGEST_LENGTH, parent._hash);
+        SHA256::computeDigest(hashContent, 2 * SHA256::DIGEST_LENGTH, parent._hash);
 
         a = &parent;
         b = (HashNode*)&hashes[i++];
     }
 
-    return (MySHA256::getInstance()->isHashesEqual(a->_hash, hashes[hashes.size() - 1]._hash) && MySHA256::getInstance()->isHashesEqual(_rootHash, a->_hash));
+    return (SHA256::isHashesEqual(a->_hash, hashes[hashes.size() - 1]._hash) && SHA256::isHashesEqual(_rootHash, a->_hash));
 }
 
 int MerkleTree::getHeight() {

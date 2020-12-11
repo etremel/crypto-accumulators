@@ -85,7 +85,6 @@ void CryptoPPToFlint(const CryptoPP::Integer& cryptoInt, flint::BigInt& flintInt
     string truncatedString = intermediateString.substr(0, intermediateString.size() - 1);
     if(!flintInt.assign(truncatedString))
         std::cerr << "Assign failed!" << std::endl;
-//    intermediateStream >> flintInt;
 }
 
 void bigIntToBytes(const flint::BigInt& bigint, unsigned char* byteArray) {

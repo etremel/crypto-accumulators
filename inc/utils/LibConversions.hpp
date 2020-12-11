@@ -22,9 +22,6 @@ extern "C" {
 #include <scalar.h>
 }
 
-#include <openssl/bn.h>
-#include <openssl/crypto.h>
-
 namespace LibConversions {
 
 /**

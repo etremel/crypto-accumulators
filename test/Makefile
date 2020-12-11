@@ -2,9 +2,9 @@ TOPDIR=..
 
 include $(TOPDIR)/rule.mk
 
-BINS=bilinearspeedtest rsaspeedtest generate_random suffixtest flinttest #libtest libtest1 libdirecttest 
-CFLAGS+=$(DCLXVI_INC) $(CRYPTOPP_INC) 
-LIBS=$(ACCUMLIB_FLG) $(DCLXVI_LIB_FLG) $(CRYPTOPP_LIB_FLG) $(GMP_LIB_FLG) -lcrypto -lflint -lmpfr
+BINS=bilinearspeedtest rsaspeedtest generate_random suffixtest flinttest #libtest libtest1 libdirecttest
+CFLAGS+=$(DCLXVI_INC) $(CRYPTOPP_INC)
+LIBS=$(ACCUMLIB_FLG) $(DCLXVI_LIB_FLG) $(CRYPTOPP_LIB_FLG) $(GMP_LIB_FLG) -lflint -lmpfr
 all:	$(BINS)
 
 generate_random: generate_random.o

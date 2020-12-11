@@ -6,24 +6,21 @@
 #ifndef _SHA_256_H_
 #define _SHA_256_H_
 
-#include <openssl/sha.h>
-
 #include <bilinear/G.hpp>
 #include <vector>
 
-class MySHA256 {
-public:
-    static MySHA256* getInstance();
+/**
+ * Some utility functions for SHA256 hashes
+ */
+namespace SHA256 {
 
-    void computeDigest(const char* input, int length, std::vector<unsigned char>& output);
-    void computeAccumulatorDigest(const G* acc, std::vector<unsigned char>& output);
-    bool isHashesEqual(const std::vector<unsigned char>& hash1, const std::vector<unsigned char>& hash2);
+//Size of a SHA256 hash is 256 bits = 32 bytes
+inline constexpr int DIGEST_LENGTH = 32;
 
-protected:
-    MySHA256();
+void computeDigest(const char* input, int length, std::vector<unsigned char>& output);
+void computeAccumulatorDigest(const G* acc, std::vector<unsigned char>& output);
+bool isHashesEqual(const std::vector<unsigned char>& hash1, const std::vector<unsigned char>& hash2);
 
-private:
-    static MySHA256* _instance;
-};
+}  // namespace SHA256
 
 #endif /* _SHA_256_H_ */

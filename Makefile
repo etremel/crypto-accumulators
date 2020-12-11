@@ -7,6 +7,8 @@ SUBDIRS=ext $(SUBDIRS_CLEAN)
 all: $(SUBDIRS)
 	@echo Done
 
+test: lib
+
 $(SUBDIRS):
 	$(MAKE) -C $@
 
